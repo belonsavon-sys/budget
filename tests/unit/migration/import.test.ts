@@ -25,7 +25,7 @@ const samplePayload = (): LegacyPayload => ({
   reminders: [],
   settings: {
     userName: "Pierre", currency: "USD", gradientFrom: "#a78bfa", gradientVia: "#f472b6",
-    gradientTo: "#fb923c", themeMode: "auto", pinEnabled: false, soundEnabled: false,
+    gradientTo: "#fb923c", themeMode: "auto", themeId: "architectural", pinEnabled: false, soundEnabled: false,
     hapticsEnabled: true, weekStartsMonday: false, showProjected: true,
   },
 });
