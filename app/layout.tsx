@@ -8,6 +8,7 @@ import QuickAddFAB from "@/components/QuickAddFAB";
 import PinGate from "@/components/PinGate";
 import { AuthProvider } from "@/lib/auth/context";
 import { HouseholdProvider } from "@/lib/household/context";
+import MigrationPrompt from "@/components/Migration/MigrationPrompt";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               </main>
               <QuickAddFAB />
             </PinGate>
+            <MigrationPrompt />
           </HouseholdProvider>
         </AuthProvider>
       </body>

@@ -1,6 +1,13 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "../db.types";
 import type { LegacyPayload } from "./types";
+
+// Supabase client type unifying across @supabase/ssr's browser/server clients.
+// The two libraries' generic arities have shifted between versions; keeping this
+// opaque at the migration boundary avoids the union-arity headache without
+// affecting runtime behaviour. The pure mapper is fully typed; only the
+// orchestrator-side .from()/.upsert() calls fall back to `as never` on rows.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnySupabaseClient = any;
 
 type DB = Database["public"]["Tables"];
 type Insert<T extends keyof DB> = DB[T]["Insert"];
@@ -72,7 +79,7 @@ export function mapPayloadToInserts(p: LegacyPayload, householdId: string): Inse
 export async function importLocalToSupabase(
   payload: LegacyPayload,
   householdId: string,
-  client: SupabaseClient<Database>
+  client: AnySupabaseClient
 ): Promise<{ inserted: Record<keyof InsertBundle, number>; errors: string[] }> {
   const bundle = mapPayloadToInserts(payload, householdId);
   const errors: string[] = [];
