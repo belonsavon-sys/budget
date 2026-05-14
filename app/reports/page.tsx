@@ -231,7 +231,7 @@ export default function ReportsPage() {
             <YAxis fontSize={11} stroke="currentColor" />
             <Tooltip
               contentStyle={{ background: "var(--bg)", border: "1px solid var(--card-border)", borderRadius: 12 }}
-              formatter={(v: number) => formatMoney(v, settings.currency)}
+              formatter={(v) => formatMoney(Number(v), settings.currency)}
             />
             <Legend />
             <Line type="monotone" dataKey="income" stroke="#22c55e" strokeWidth={2} dot={false} />
@@ -266,7 +266,7 @@ export default function ReportsPage() {
               </Pie>
               <Tooltip
                 contentStyle={{ background: "var(--bg)", border: "1px solid var(--card-border)", borderRadius: 12 }}
-                formatter={(v: number) => formatMoney(v, settings.currency)}
+                formatter={(v) => formatMoney(Number(v), settings.currency)}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -285,7 +285,7 @@ export default function ReportsPage() {
               <YAxis fontSize={11} stroke="currentColor" />
               <Tooltip
                 contentStyle={{ background: "var(--bg)", border: "1px solid var(--card-border)", borderRadius: 12 }}
-                formatter={(v: number) => formatMoney(v, settings.currency)}
+                formatter={(v) => formatMoney(Number(v), settings.currency)}
               />
               <Legend />
               <Bar dataKey="income" fill="#22c55e" radius={[8, 8, 0, 0]} />

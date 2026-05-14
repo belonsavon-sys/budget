@@ -93,7 +93,7 @@ export default function FolderPage({
               </Pie>
               <Tooltip
                 contentStyle={{ background: "var(--bg)", border: "1px solid var(--card-border)", borderRadius: 12 }}
-                formatter={(v: number) => formatMoney(v, settings.currency)}
+                formatter={(v) => formatMoney(Number(v), settings.currency)}
               />
             </PieChart>
           </ResponsiveContainer>
