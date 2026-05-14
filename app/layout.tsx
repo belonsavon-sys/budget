@@ -6,6 +6,8 @@ import Aurora from "@/components/Aurora";
 import Nav from "@/components/Nav";
 import QuickAddFAB from "@/components/QuickAddFAB";
 import PinGate from "@/components/PinGate";
+import { AuthProvider } from "@/lib/auth/context";
+import { HouseholdProvider } from "@/lib/household/context";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -33,15 +35,19 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full">
-        <ThemeBridge />
-        <Aurora />
-        <PinGate>
-          <Nav />
-          <main className="md:pl-64 pb-28 md:pb-8 pt-4 px-4 md:px-8 safe-top max-w-6xl mx-auto md:mx-0">
-            {children}
-          </main>
-          <QuickAddFAB />
-        </PinGate>
+        <AuthProvider>
+          <HouseholdProvider>
+            <ThemeBridge />
+            <Aurora />
+            <PinGate>
+              <Nav />
+              <main className="md:pl-64 pb-28 md:pb-8 pt-4 px-4 md:px-8 safe-top max-w-6xl mx-auto md:mx-0">
+                {children}
+              </main>
+              <QuickAddFAB />
+            </PinGate>
+          </HouseholdProvider>
+        </AuthProvider>
       </body>
     </html>
   );
