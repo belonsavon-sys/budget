@@ -1,0 +1,34 @@
+:root[data-theme="terminal"] {
+  --bg: #050608;
+  --surface: rgba(212, 240, 224, 0.04);
+  --surface-2: rgba(212, 240, 224, 0.08);
+
+  --ink: #d4f0e0;
+  --ink-muted: rgba(212, 240, 224, 0.65);
+  --ink-faint: rgba(212, 240, 224, 0.4);
+
+  --accent: #34d399;
+  --accent-2: #22d3ee;
+  --positive: #34d399;
+  --negative: #f87171;
+  --warning: #fbbf24;
+
+  --line: rgba(52, 211, 153, 0.18);
+  --line-strong: rgba(52, 211, 153, 0.4);
+  --shadow-card: 0 4px 18px rgba(0, 0, 0, 0.45);
+  --shadow-card-strong: 0 14px 44px rgba(0, 0, 0, 0.6);
+  --blur-glass: 8px;
+
+  --font-display: var(--font-plex-mono), ui-monospace, monospace;
+  --font-body: var(--font-plex-mono), ui-monospace, monospace;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --radius-card: 4px;
+  --radius-pill: 4px;
+  --motion-fast: 100ms;
+  --motion-medium: 180ms;
+
+  --grain-opacity: 0;
+  --ambient-svg-opacity: 0.18;
+  color-scheme: dark;
+}

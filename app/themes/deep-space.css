@@ -1,0 +1,34 @@
+:root[data-theme="deep-space"] {
+  --bg: #020310;
+  --surface: rgba(230, 232, 245, 0.04);
+  --surface-2: rgba(230, 232, 245, 0.08);
+
+  --ink: #e6e8f5;
+  --ink-muted: rgba(230, 232, 245, 0.65);
+  --ink-faint: rgba(230, 232, 245, 0.4);
+
+  --accent: #a8a0e8;
+  --accent-2: #8b7fd0;
+  --positive: #9be0a8;
+  --negative: #f4a3a3;
+  --warning: #f5d97c;
+
+  --line: rgba(230, 232, 245, 0.1);
+  --line-strong: rgba(230, 232, 245, 0.25);
+  --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.6);
+  --shadow-card-strong: 0 14px 44px rgba(0, 0, 0, 0.7);
+  --blur-glass: 12px;
+
+  --font-display: var(--font-cormorant), Georgia, serif;
+  --font-body: var(--font-geist-sans), -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+
+  --radius-card: 14px;
+  --radius-pill: 12px;
+  --motion-fast: 160ms;
+  --motion-medium: 260ms;
+
+  --grain-opacity: 0;
+  --ambient-svg-opacity: 1;
+  color-scheme: dark;
+}

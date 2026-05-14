@@ -1,0 +1,34 @@
+:root[data-theme="ledger"] {
+  --bg: #e8dcc4;
+  --surface: rgba(255, 250, 235, 0.55);
+  --surface-2: rgba(95, 60, 20, 0.08);
+
+  --ink: #1f1810;
+  --ink-muted: rgba(31, 24, 16, 0.7);
+  --ink-faint: rgba(31, 24, 16, 0.45);
+
+  --accent: #b8860b;
+  --accent-2: #5b3a1a;
+  --positive: #3d5a3c;
+  --negative: #8b2b1f;
+  --warning: #a16207;
+
+  --line: rgba(95, 60, 20, 0.2);
+  --line-strong: rgba(95, 60, 20, 0.35);
+  --shadow-card: 0 6px 20px rgba(60, 40, 15, 0.08);
+  --shadow-card-strong: 0 12px 36px rgba(60, 40, 15, 0.14);
+  --blur-glass: 4px;
+
+  --font-display: var(--font-playfair), Didot, Georgia, serif;
+  --font-body: var(--font-cormorant), Georgia, serif;
+  --font-mono: var(--font-geist-mono), monospace;
+
+  --radius-card: 6px;
+  --radius-pill: 8px;
+  --motion-fast: 140ms;
+  --motion-medium: 240ms;
+
+  --grain-opacity: 0.55;
+  --ambient-svg-opacity: 0;
+  color-scheme: light;
+}
