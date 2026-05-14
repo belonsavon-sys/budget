@@ -1,26 +1,197 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #f8fafc;
+  --fg: #0f172a;
+  --card: rgba(255, 255, 255, 0.65);
+  --card-border: rgba(255, 255, 255, 0.6);
+  --muted: rgba(15, 23, 42, 0.55);
+  --hover: rgba(15, 23, 42, 0.06);
+  --shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
+  --grad-from: #a78bfa;
+  --grad-via: #f472b6;
+  --grad-to: #fb923c;
+}
+
+html.dark {
+  --bg: #06070b;
+  --fg: #f1f5f9;
+  --card: rgba(20, 24, 33, 0.6);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --muted: rgba(241, 245, 249, 0.55);
+  --hover: rgba(255, 255, 255, 0.06);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: contain;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Animated aurora gradient mesh — uses the user's gradient picker */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.aurora::before,
+.aurora::after,
+.aurora .blob {
+  content: "";
+  position: absolute;
+  width: 60vmax;
+  height: 60vmax;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.55;
+  animation: drift 22s ease-in-out infinite;
+}
+.aurora::before {
+  background: var(--grad-from);
+  top: -25vmax;
+  left: -15vmax;
+  animation-delay: 0s;
+}
+.aurora::after {
+  background: var(--grad-to);
+  bottom: -25vmax;
+  right: -15vmax;
+  animation-delay: -8s;
+}
+.aurora .blob {
+  background: var(--grad-via);
+  top: 30%;
+  left: 40%;
+  animation-delay: -14s;
+}
+html.dark .aurora::before,
+html.dark .aurora::after,
+html.dark .aurora .blob {
+  opacity: 0.35;
+}
+
+@keyframes drift {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(8vmax, -4vmax) scale(1.1);
+  }
+  66% {
+    transform: translate(-6vmax, 6vmax) scale(0.95);
+  }
+}
+
+/* Glassmorphism cards */
+.glass {
+  background: var(--card);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow);
+  border-radius: 1.25rem;
+}
+
+.gradient-text {
+  background: linear-gradient(120deg, var(--grad-from), var(--grad-via), var(--grad-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.gradient-fill {
+  background: linear-gradient(120deg, var(--grad-from), var(--grad-via), var(--grad-to));
+}
+
+.pulse-dot {
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.5;
+  }
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Hide scrollbar visually but keep scrollable */
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+  color: inherit;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.tap {
+  transition: transform 120ms ease, background 120ms ease;
+}
+.tap:active {
+  transform: scale(0.96);
+}
+
+.safe-bottom {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0) + 0.5rem);
+}
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0);
 }
