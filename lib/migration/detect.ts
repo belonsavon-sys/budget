@@ -1,24 +1,26 @@
 import { LEGACY_STORE_KEY, type LegacyDataReport, type LegacyPayload } from "./types";
 
-const EMPTY_REPORT: LegacyDataReport = {
-  has: false,
-  payload: null,
-  counts: {
-    accounts: 0, categories: 0, tags: 0, transactions: 0,
-    recurring: 0, goals: 0, budgets: 0, notes: 0, reminders: 0,
-  },
-};
+function emptyReport(): LegacyDataReport {
+  return {
+    has: false,
+    payload: null,
+    counts: {
+      accounts: 0, categories: 0, tags: 0, transactions: 0,
+      recurring: 0, goals: 0, budgets: 0, notes: 0, reminders: 0,
+    },
+  };
+}
 
 export function detectLegacyData(): LegacyDataReport {
-  if (typeof localStorage === "undefined") return EMPTY_REPORT;
+  if (typeof localStorage === "undefined") return emptyReport();
   const raw = localStorage.getItem(LEGACY_STORE_KEY);
-  if (!raw) return EMPTY_REPORT;
+  if (!raw) return emptyReport();
 
   let parsed: { state?: Partial<LegacyPayload> };
   try {
     parsed = JSON.parse(raw);
   } catch {
-    return EMPTY_REPORT;
+    return emptyReport();
   }
   const s = parsed.state ?? {};
   const payload: LegacyPayload = {
@@ -31,11 +33,15 @@ export function detectLegacyData(): LegacyDataReport {
     budgets: s.budgets ?? [],
     notes: s.notes ?? [],
     reminders: s.reminders ?? [],
+    // Cast is intentional: we accept malformed/partial settings so detection never throws.
+    // Callers must treat payload.settings fields as possibly undefined.
     settings: s.settings ?? ({} as LegacyPayload["settings"]),
   };
 
   // "Has data" means any of the user-content arrays are non-empty.
   // The default starter ships with one Checking account + default categories — we ignore both.
+  // Note: categories are excluded entirely because the default store seeds 17 of them
+  // (see defaultCategories in store.ts). Including them would always return has=true.
   const userContent =
     payload.transactions.length +
     payload.tags.length +
