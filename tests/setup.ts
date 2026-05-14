@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
 
-if (typeof localStorage === "undefined") {
+if (typeof localStorage === "undefined" || typeof localStorage.clear !== "function") {
   const store = new Map<string, string>();
   // @ts-expect-error test polyfill
   globalThis.localStorage = {
