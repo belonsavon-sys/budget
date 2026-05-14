@@ -60,6 +60,7 @@ const defaultSettings: Settings = {
   gradientVia: "#f472b6",
   gradientTo: "#fb923c",
   themeMode: "auto",
+  themeId: "architectural",
   pinEnabled: false,
   soundEnabled: false,
   hapticsEnabled: true,

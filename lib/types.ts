@@ -144,6 +144,8 @@ export interface Reminder {
 
 export type ThemeMode = "light" | "dark" | "auto";
 
+import type { ThemeId } from "./themes";
+
 export interface Settings {
   userName: string;
   currency: Currency;
@@ -151,6 +153,8 @@ export interface Settings {
   gradientVia: string;
   gradientTo: string;
   themeMode: ThemeMode;
+  /** Wave 2: selected theme palette. ThemeMode is the legacy auto/light/dark flag. */
+  themeId: ThemeId;
   pinHash?: string;
   pinEnabled: boolean;
   soundEnabled: boolean;
