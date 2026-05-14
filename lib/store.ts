@@ -17,6 +17,8 @@ import type {
 } from "./types";
 import { uid } from "./utils";
 import { materializeRecurring } from "./recurring";
+import { upsertRow, deleteRow, appToRow } from "./sync/sync-engine";
+type AppTable = keyof typeof appToRow;
 
 const defaultCategories: Category[] = [
   { id: "c-food", name: "Food & Drink", icon: "Utensils", color: "#f59e0b", type: "expense" },
@@ -107,6 +109,8 @@ export interface StoreActions {
 
   updateSettings: (s: Partial<Settings>) => void;
 
+  setCurrentHousehold: (id: string | null) => void;
+
   exportData: () => string;
   importData: (json: string, mode: "merge" | "replace") => { ok: boolean; error?: string };
   resetAll: () => void;
@@ -116,7 +120,19 @@ export type Store = AppState & StoreActions;
 
 export const useStore = create<Store>()(
   persist(
-    (set, get) => ({
+    (set, get) => {
+      const syncAfter = <T extends AppTable>(table: T, row: unknown, mode: "upsert" | "delete", id?: string) => {
+        const hid = get().currentHouseholdId;
+        if (!hid) return;
+        if (mode === "delete" && id) {
+          deleteRow({ table, id }).catch(() => {});
+        } else if (mode === "upsert" && row) {
+          const dbRow = (appToRow[table] as (a: unknown, h: string) => unknown)(row, hid);
+          upsertRow({ table, row: dbRow as never }).catch(() => {});
+        }
+      };
+
+      return {
       accounts: defaultAccounts,
       categories: defaultCategories,
       tags: [],
@@ -128,75 +144,129 @@ export const useStore = create<Store>()(
       reminders: [],
       settings: defaultSettings,
       hydrated: false,
+      currentHouseholdId: null,
 
-      addAccount: (a) =>
-        set((s) => ({ accounts: [...s.accounts, { ...a, id: uid("a") }] })),
-      updateAccount: (id, a) =>
+      setCurrentHousehold: (id) => set({ currentHouseholdId: id }),
+
+      addAccount: (a) => {
+        const acc = { ...a, id: uid("a") };
+        set((s) => ({ accounts: [...s.accounts, acc] }));
+        syncAfter("accounts", acc, "upsert");
+      },
+      updateAccount: (id, a) => {
         set((s) => ({
           accounts: s.accounts.map((x) => (x.id === id ? { ...x, ...a } : x)),
-        })),
-      removeAccount: (id) =>
-        set((s) => ({ accounts: s.accounts.filter((x) => x.id !== id) })),
+        }));
+        const after = get().accounts.find((x) => x.id === id);
+        if (after) syncAfter("accounts", after, "upsert");
+      },
+      removeAccount: (id) => {
+        set((s) => ({ accounts: s.accounts.filter((x) => x.id !== id) }));
+        syncAfter("accounts", null, "delete", id);
+      },
 
-      addCategory: (c) =>
-        set((s) => ({ categories: [...s.categories, { ...c, id: uid("c") }] })),
-      updateCategory: (id, c) =>
+      addCategory: (c) => {
+        const cat = { ...c, id: uid("c") };
+        set((s) => ({ categories: [...s.categories, cat] }));
+        syncAfter("categories", cat, "upsert");
+      },
+      updateCategory: (id, c) => {
         set((s) => ({
           categories: s.categories.map((x) => (x.id === id ? { ...x, ...c } : x)),
-        })),
-      removeCategory: (id) =>
-        set((s) => ({ categories: s.categories.filter((x) => x.id !== id) })),
+        }));
+        const after = get().categories.find((x) => x.id === id);
+        if (after) syncAfter("categories", after, "upsert");
+      },
+      removeCategory: (id) => {
+        set((s) => ({ categories: s.categories.filter((x) => x.id !== id) }));
+        syncAfter("categories", null, "delete", id);
+      },
 
-      addTag: (t) => set((s) => ({ tags: [...s.tags, { ...t, id: uid("t") }] })),
-      updateTag: (id, t) =>
-        set((s) => ({ tags: s.tags.map((x) => (x.id === id ? { ...x, ...t } : x)) })),
-      removeTag: (id) => set((s) => ({ tags: s.tags.filter((x) => x.id !== id) })),
+      addTag: (t) => {
+        const tag = { ...t, id: uid("t") };
+        set((s) => ({ tags: [...s.tags, tag] }));
+        syncAfter("tags", tag, "upsert");
+      },
+      updateTag: (id, t) => {
+        set((s) => ({ tags: s.tags.map((x) => (x.id === id ? { ...x, ...t } : x)) }));
+        const after = get().tags.find((x) => x.id === id);
+        if (after) syncAfter("tags", after, "upsert");
+      },
+      removeTag: (id) => {
+        set((s) => ({ tags: s.tags.filter((x) => x.id !== id) }));
+        syncAfter("tags", null, "delete", id);
+      },
 
       addTransaction: (t) => {
         const txn: Transaction = { ...t, id: uid("x") };
         set((s) => ({ transactions: [...s.transactions, txn] }));
+        syncAfter("transactions", txn, "upsert");
         return txn;
       },
-      updateTransaction: (id, t) =>
+      updateTransaction: (id, t) => {
         set((s) => ({
           transactions: s.transactions.map((x) => (x.id === id ? { ...x, ...t } : x)),
-        })),
-      removeTransaction: (id) =>
-        set((s) => ({ transactions: s.transactions.filter((x) => x.id !== id) })),
-      bulkSetStatus: (ids, status) =>
+        }));
+        const after = get().transactions.find((x) => x.id === id);
+        if (after) syncAfter("transactions", after, "upsert");
+      },
+      removeTransaction: (id) => {
+        set((s) => ({ transactions: s.transactions.filter((x) => x.id !== id) }));
+        syncAfter("transactions", null, "delete", id);
+      },
+      bulkSetStatus: (ids, status) => {
         set((s) => ({
           transactions: s.transactions.map((x) =>
             ids.includes(x.id) ? { ...x, status } : x
           ),
-        })),
+        }));
+        const all = get().transactions;
+        for (const id of ids) {
+          const t = all.find((x) => x.id === id);
+          if (t) syncAfter("transactions", t, "upsert");
+        }
+      },
 
       addRecurring: (r) => {
         const rule: RecurringRule = { ...r, id: uid("rr") };
         set((s) => ({ recurring: [...s.recurring, rule] }));
+        syncAfter("recurring_rules", rule, "upsert");
         get().generateRecurring();
       },
-      updateRecurring: (id, r) =>
+      updateRecurring: (id, r) => {
         set((s) => ({
           recurring: s.recurring.map((x) => (x.id === id ? { ...x, ...r } : x)),
-        })),
-      removeRecurring: (id) =>
+        }));
+        const after = get().recurring.find((x) => x.id === id);
+        if (after) syncAfter("recurring_rules", after, "upsert");
+      },
+      removeRecurring: (id) => {
         set((s) => ({
           recurring: s.recurring.filter((x) => x.id !== id),
           transactions: s.transactions.filter((t) => t.recurringId !== id),
-        })),
+        }));
+        syncAfter("recurring_rules", null, "delete", id);
+      },
       generateRecurring: () => {
         const { recurring, transactions } = get();
         const newOnes = materializeRecurring(recurring, transactions);
-        if (newOnes.length) set((s) => ({ transactions: [...s.transactions, ...newOnes] }));
+        if (newOnes.length) {
+          set((s) => ({ transactions: [...s.transactions, ...newOnes] }));
+          for (const t of newOnes) syncAfter("transactions", t, "upsert");
+        }
       },
 
-      addGoal: (g) =>
-        set((s) => ({
-          goals: [...s.goals, { ...g, id: uid("g"), current: 0, contributions: [] }],
-        })),
-      updateGoal: (id, g) =>
-        set((s) => ({ goals: s.goals.map((x) => (x.id === id ? { ...x, ...g } : x)) })),
-      contributeToGoal: (id, amount, note) =>
+      addGoal: (g) => {
+        const goal = { ...g, id: uid("g"), current: 0, contributions: [] };
+        set((s) => ({ goals: [...s.goals, goal] }));
+        syncAfter("savings_goals", goal, "upsert");
+      },
+      updateGoal: (id, g) => {
+        set((s) => ({ goals: s.goals.map((x) => (x.id === id ? { ...x, ...g } : x)) }));
+        const after = get().goals.find((x) => x.id === id);
+        if (after) syncAfter("savings_goals", after, "upsert");
+      },
+      contributeToGoal: (id, amount, note) => {
         set((s) => ({
           goals: s.goals.map((x) =>
             x.id === id
@@ -210,40 +280,68 @@ export const useStore = create<Store>()(
                 }
               : x
           ),
-        })),
-      removeGoal: (id) => set((s) => ({ goals: s.goals.filter((x) => x.id !== id) })),
+        }));
+        const after = get().goals.find((x) => x.id === id);
+        if (after) syncAfter("savings_goals", after, "upsert");
+      },
+      removeGoal: (id) => {
+        set((s) => ({ goals: s.goals.filter((x) => x.id !== id) }));
+        syncAfter("savings_goals", null, "delete", id);
+      },
 
-      addBudget: (b) =>
-        set((s) => ({ budgets: [...s.budgets, { ...b, id: uid("b") }] })),
-      updateBudget: (id, b) =>
+      addBudget: (b) => {
+        const budget = { ...b, id: uid("b") };
+        set((s) => ({ budgets: [...s.budgets, budget] }));
+        syncAfter("budgets", budget, "upsert");
+      },
+      updateBudget: (id, b) => {
         set((s) => ({
           budgets: s.budgets.map((x) => (x.id === id ? { ...x, ...b } : x)),
-        })),
-      removeBudget: (id) =>
-        set((s) => ({ budgets: s.budgets.filter((x) => x.id !== id) })),
+        }));
+        const after = get().budgets.find((x) => x.id === id);
+        if (after) syncAfter("budgets", after, "upsert");
+      },
+      removeBudget: (id) => {
+        set((s) => ({ budgets: s.budgets.filter((x) => x.id !== id) }));
+        syncAfter("budgets", null, "delete", id);
+      },
 
       addNote: (n) => {
         const now = new Date().toISOString();
-        set((s) => ({
-          notes: [...s.notes, { ...n, id: uid("n"), createdAt: now, updatedAt: now }],
-        }));
+        const note = { ...n, id: uid("n"), createdAt: now, updatedAt: now };
+        set((s) => ({ notes: [...s.notes, note] }));
+        syncAfter("notes", note, "upsert");
       },
-      updateNote: (id, n) =>
+      updateNote: (id, n) => {
         set((s) => ({
           notes: s.notes.map((x) =>
             x.id === id ? { ...x, ...n, updatedAt: new Date().toISOString() } : x
           ),
-        })),
-      removeNote: (id) => set((s) => ({ notes: s.notes.filter((x) => x.id !== id) })),
+        }));
+        const after = get().notes.find((x) => x.id === id);
+        if (after) syncAfter("notes", after, "upsert");
+      },
+      removeNote: (id) => {
+        set((s) => ({ notes: s.notes.filter((x) => x.id !== id) }));
+        syncAfter("notes", null, "delete", id);
+      },
 
-      addReminder: (r) =>
-        set((s) => ({ reminders: [...s.reminders, { ...r, id: uid("rm") }] })),
-      updateReminder: (id, r) =>
+      addReminder: (r) => {
+        const rm = { ...r, id: uid("rm") };
+        set((s) => ({ reminders: [...s.reminders, rm] }));
+        syncAfter("reminders", rm, "upsert");
+      },
+      updateReminder: (id, r) => {
         set((s) => ({
           reminders: s.reminders.map((x) => (x.id === id ? { ...x, ...r } : x)),
-        })),
-      removeReminder: (id) =>
-        set((s) => ({ reminders: s.reminders.filter((x) => x.id !== id) })),
+        }));
+        const after = get().reminders.find((x) => x.id === id);
+        if (after) syncAfter("reminders", after, "upsert");
+      },
+      removeReminder: (id) => {
+        set((s) => ({ reminders: s.reminders.filter((x) => x.id !== id) }));
+        syncAfter("reminders", null, "delete", id);
+      },
 
       updateSettings: (s) =>
         set((state) => ({ settings: { ...state.settings, ...s } })),
@@ -333,7 +431,8 @@ export const useStore = create<Store>()(
           reminders: [],
           settings: defaultSettings,
         }),
-    }),
+      };
+    },
     {
       name: "budget-store-v1",
       storage: createJSONStorage(() => localStorage),

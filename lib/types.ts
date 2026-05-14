@@ -162,6 +162,7 @@ export interface Settings {
 export interface AppState {
   accounts: Account[];
   categories: Category[];
+  currentHouseholdId: string | null;
   tags: Tag[];
   transactions: Transaction[];
   recurring: RecurringRule[];
