@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "../db.types";
+import type { Database, Json } from "../db.types";
 import type { LegacyPayload } from "./types";
 
 type DB = Database["public"]["Tables"];
@@ -36,8 +36,8 @@ export function mapPayloadToInserts(p: LegacyPayload, householdId: string): Inse
       currency: x.currency, description: x.description, category_id: x.categoryId ?? null,
       account_id: x.accountId, to_account_id: x.toAccountId ?? null,
       tag_ids: x.tagIds, date: x.date, status: x.status, notes: x.notes ?? null,
-      attachments: (x.attachments ?? null) as never, recurring_id: x.recurringId ?? null,
-      splits: (x.splits ?? null) as never, projected: x.projected ?? false,
+      attachments: (x.attachments ?? null) as Json | null, recurring_id: x.recurringId ?? null,
+      splits: (x.splits ?? null) as Json | null, projected: x.projected ?? false,
     })),
     recurring_rules: p.recurring.map((r) => ({
       id: r.id, household_id: householdId, name: r.name, type: r.type, amount: r.amount,
@@ -50,7 +50,7 @@ export function mapPayloadToInserts(p: LegacyPayload, householdId: string): Inse
     savings_goals: p.goals.map((g) => ({
       id: g.id, household_id: householdId, name: g.name, target: g.target,
       current: g.current, deadline: g.deadline ?? null, color: g.color, icon: g.icon,
-      account_id: g.accountId ?? null, contributions: g.contributions as never,
+      account_id: g.accountId ?? null, contributions: g.contributions as Json,
     })),
     budgets: p.budgets.map((b) => ({
       id: b.id, household_id: householdId, category_id: b.categoryId,
