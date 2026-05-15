@@ -311,7 +311,7 @@ function Stat({
 }) {
   return (
     <div className="glass p-4">
-      <div className="text-xs text-[var(--muted)]">{label}</div>
+      <div className="text-xs text-[var(--ink-muted)]">{label}</div>
       <div className="text-2xl font-bold tabular-nums" style={{ color }}>
         {formatMoney(value, currency)}
       </div>

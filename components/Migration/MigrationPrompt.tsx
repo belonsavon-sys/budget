@@ -88,11 +88,11 @@ export default function MigrationPrompt() {
 
             {state === "done" ? (
               <div className="space-y-3 py-2">
-                <div className="flex items-center gap-2 text-green-500">
+                <div className="flex items-center gap-2 text-[var(--positive)]">
                   <Sparkles size={18} />
                   <h2 className="text-lg font-semibold">All set</h2>
                 </div>
-                <p className="text-sm text-[var(--muted)]">
+                <p className="text-sm text-[var(--ink-muted)]">
                   Imported {counts?.transactions ?? 0} transactions, {counts?.accounts ?? 0} accounts,
                   and {counts?.savings_goals ?? 0} goals. You can now use the app from any device.
                 </p>
@@ -105,7 +105,7 @@ export default function MigrationPrompt() {
                   </div>
                   <h2 className="text-lg font-semibold">Bring your data along?</h2>
                 </div>
-                <p className="text-sm text-[var(--muted)] leading-relaxed">
+                <p className="text-sm text-[var(--ink-muted)] leading-relaxed">
                   We found existing data on this device.
                   Import it so you can pick up where you left off — across all your devices.
                 </p>
@@ -114,13 +114,13 @@ export default function MigrationPrompt() {
                     report?.counts[k] ? (
                       <span key={k} className="tabular-nums">
                         <strong>{report.counts[k]}</strong>{" "}
-                        <span className="text-[var(--muted)]">{k}</span>
+                        <span className="text-[var(--ink-muted)]">{k}</span>
                       </span>
                     ) : null
                   )}
                 </div>
                 {state === "error" && (
-                  <div className="text-sm text-red-500">{errorMsg ?? "Import failed."}</div>
+                  <div className="text-sm text-[var(--negative)]">{errorMsg ?? "Import failed."}</div>
                 )}
                 <div className="flex gap-2 pt-1">
                   <button

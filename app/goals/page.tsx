@@ -42,7 +42,7 @@ export default function GoalsPage() {
       </header>
 
       {goals.length === 0 && (
-        <div className="glass p-10 text-center text-[var(--muted)]">
+        <div className="glass p-10 text-center text-[var(--ink-muted)]">
           No goals yet. Set a target to start saving toward something.
         </div>
       )}
@@ -70,7 +70,7 @@ export default function GoalsPage() {
                   <div>
                     <div className="font-semibold">{g.name}</div>
                     {g.deadline && (
-                      <div className="text-xs text-[var(--muted)]">
+                      <div className="text-xs text-[var(--ink-muted)]">
                         by {new Date(g.deadline).toLocaleDateString()}
                       </div>
                     )}
@@ -87,7 +87,7 @@ export default function GoalsPage() {
                     onClick={() => {
                       if (confirm("Delete this goal?")) removeGoal(g.id);
                     }}
-                    className="tap p-2 rounded-full hover:bg-red-500/15 text-red-500"
+                    className="tap p-2 rounded-full hover:bg-[color-mix(in_srgb,var(--negative)_15%,transparent)] text-[var(--negative)]"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -96,7 +96,7 @@ export default function GoalsPage() {
 
               <div className="flex items-baseline justify-between mb-2 mt-3">
                 <div className="text-2xl font-bold tabular-nums">{formatMoney(g.current, settings.currency)}</div>
-                <div className="text-sm text-[var(--muted)] tabular-nums">/ {formatMoney(g.target, settings.currency)}</div>
+                <div className="text-sm text-[var(--ink-muted)] tabular-nums">/ {formatMoney(g.target, settings.currency)}</div>
               </div>
               <div className="h-3 rounded-full bg-[var(--hover)] overflow-hidden">
                 <motion.div
@@ -106,7 +106,7 @@ export default function GoalsPage() {
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 />
               </div>
-              <div className="flex justify-between text-xs text-[var(--muted)] mt-2">
+              <div className="flex justify-between text-xs text-[var(--ink-muted)] mt-2">
                 <span>{pct.toFixed(0)}%</span>
                 <span>{formatMoney(remaining, settings.currency)} to go</span>
               </div>
@@ -220,7 +220,7 @@ function ContribForm({
         onContribute(v, note || undefined);
       }}
     >
-      <div className="text-sm text-[var(--muted)]">
+      <div className="text-sm text-[var(--ink-muted)]">
         Currently at {formatMoney(goal.current, settings.currency)} of {formatMoney(goal.target, settings.currency)}
       </div>
       <Field label="Amount">

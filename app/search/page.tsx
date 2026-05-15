@@ -53,7 +53,7 @@ export default function SearchPage() {
         <h1 className="text-3xl font-bold tracking-tight gradient-text">Search</h1>
       </header>
       <div className="glass p-3 relative">
-        <Search size={16} className="absolute left-7 top-1/2 -translate-y-1/2 text-[var(--muted)]" />
+        <Search size={16} className="absolute left-7 top-1/2 -translate-y-1/2 text-[var(--ink-muted)]" />
         <Input
           autoFocus
           value={q}
@@ -77,7 +77,7 @@ export default function SearchPage() {
               {noteResults.map((n) => (
                 <Link key={n.id} href="/notes" className="glass p-3 block tap">
                   <div className="font-medium">{n.title}</div>
-                  <div className="text-sm text-[var(--muted)] line-clamp-2">{n.content}</div>
+                  <div className="text-sm text-[var(--ink-muted)] line-clamp-2">{n.content}</div>
                 </Link>
               ))}
             </section>
@@ -99,7 +99,7 @@ export default function SearchPage() {
             </section>
           )}
           {txnResults.length + noteResults.length + goalResults.length + accountResults.length === 0 && (
-            <div className="glass p-10 text-center text-[var(--muted)]">No matches.</div>
+            <div className="glass p-10 text-center text-[var(--ink-muted)]">No matches.</div>
           )}
         </div>
       )}

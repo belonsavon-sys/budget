@@ -14,10 +14,10 @@ export function Field({
   return (
     <label className="block">
       {label && (
-        <div className="text-xs font-medium mb-1.5 text-[var(--muted)]">{label}</div>
+        <div className="text-xs font-medium mb-1.5 text-[var(--ink-muted)]">{label}</div>
       )}
       {children}
-      {hint && <div className="text-xs text-[var(--muted)] mt-1">{hint}</div>}
+      {hint && <div className="text-xs text-[var(--ink-muted)] mt-1">{hint}</div>}
     </label>
   );
 }
@@ -71,7 +71,7 @@ export function Button({
     primary: "gradient-fill text-white shadow-lg",
     secondary: "bg-[var(--hover)] text-[var(--fg)]",
     ghost: "hover:bg-[var(--hover)]",
-    danger: "bg-red-500/15 text-red-500 hover:bg-red-500/25",
+    danger: "bg-[color-mix(in_srgb,var(--negative)_15%,transparent)] text-[var(--negative)] hover:bg-red-500/25",
   };
   const sizes = {
     sm: "px-3 py-1.5 text-sm rounded-xl",

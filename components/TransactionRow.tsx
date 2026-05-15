@@ -82,10 +82,10 @@ export default function TransactionRow({ txn }: { txn: Transaction }) {
             {txn.status === "pending" && (
               <Clock size={12} className="text-amber-500" />
             )}
-            {txn.attachments?.length ? <Paperclip size={12} className="text-[var(--muted)]" /> : null}
-            {txn.notes ? <StickyNote size={12} className="text-[var(--muted)]" /> : null}
+            {txn.attachments?.length ? <Paperclip size={12} className="text-[var(--ink-muted)]" /> : null}
+            {txn.notes ? <StickyNote size={12} className="text-[var(--ink-muted)]" /> : null}
           </div>
-          <div className="text-xs text-[var(--muted)] flex items-center gap-1.5 flex-wrap">
+          <div className="text-xs text-[var(--ink-muted)] flex items-center gap-1.5 flex-wrap">
             <span>{new Date(txn.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span>
             <span>·</span>
             <span>
@@ -111,7 +111,7 @@ export default function TransactionRow({ txn }: { txn: Transaction }) {
             className={`tap w-8 h-8 rounded-full grid place-items-center ${
               txn.status === "paid" || txn.status === "received"
                 ? "bg-green-500 text-white"
-                : "bg-[var(--hover)] text-[var(--muted)]"
+                : "bg-[var(--hover)] text-[var(--ink-muted)]"
             }`}
             aria-label="Mark paid"
           >
@@ -129,9 +129,9 @@ export default function TransactionRow({ txn }: { txn: Transaction }) {
             className="px-3 -mt-1 mb-1 overflow-hidden"
           >
             <div className="glass p-3 text-sm flex flex-col gap-2 rounded-t-none">
-              {txn.notes && <div className="whitespace-pre-wrap text-[var(--muted)]">{txn.notes}</div>}
+              {txn.notes && <div className="whitespace-pre-wrap text-[var(--ink-muted)]">{txn.notes}</div>}
               {txn.splits && txn.splits.length > 0 && (
-                <div className="text-xs text-[var(--muted)]">
+                <div className="text-xs text-[var(--ink-muted)]">
                   Splits: {txn.splits.map((s, i) => (
                     <span key={i}>
                       {categories.find((c) => c.id === s.categoryId)?.name ?? "—"} {formatMoney(s.amount, txn.currency)}
@@ -162,7 +162,7 @@ export default function TransactionRow({ txn }: { txn: Transaction }) {
                   <Edit3 size={12} />Edit
                 </button>
                 <button
-                  className="tap text-xs px-3 py-1.5 rounded-lg bg-red-500/15 text-red-500 inline-flex items-center gap-1"
+                  className="tap text-xs px-3 py-1.5 rounded-lg bg-[color-mix(in_srgb,var(--negative)_15%,transparent)] text-[var(--negative)] inline-flex items-center gap-1"
                   onClick={() => {
                     if (confirm("Delete this transaction?")) removeTransaction(txn.id);
                   }}

@@ -37,7 +37,7 @@ export default function SignInForm() {
         <h1 className="text-2xl font-bold tracking-tight">
           <span className="gradient-text">Sign in</span>
         </h1>
-        <p className="text-sm text-[var(--muted)] mt-1">
+        <p className="text-sm text-[var(--ink-muted)] mt-1">
           We'll email you a magic link. No password needed.
         </p>
       </div>
@@ -45,7 +45,7 @@ export default function SignInForm() {
       {state !== "sent" && (
         <>
           <label className="block">
-            <span className="text-xs text-[var(--muted)] uppercase tracking-wider">Email</span>
+            <span className="text-xs text-[var(--ink-muted)] uppercase tracking-wider">Email</span>
             <input
               type="email"
               required
@@ -66,7 +66,7 @@ export default function SignInForm() {
             {state === "sending" ? "Sending…" : "Send magic link"}
           </button>
           {state === "error" && (
-            <p className="text-sm text-red-500">{error ?? "Something went wrong."}</p>
+            <p className="text-sm text-[var(--negative)]">{error ?? "Something went wrong."}</p>
           )}
         </>
       )}
@@ -77,19 +77,19 @@ export default function SignInForm() {
           animate={{ opacity: 1 }}
           className="flex flex-col items-center text-center gap-3 py-2"
         >
-          <div className="w-12 h-12 rounded-full bg-green-500/15 flex items-center justify-center">
-            <Check size={24} className="text-green-500" />
+          <div className="w-12 h-12 rounded-full bg-[color-mix(in_srgb,var(--positive)_15%,transparent)] flex items-center justify-center">
+            <Check size={24} className="text-[var(--positive)]" />
           </div>
           <div>
             <div className="font-medium">Check your email</div>
-            <div className="text-sm text-[var(--muted)] mt-1 flex items-center gap-1.5 justify-center">
+            <div className="text-sm text-[var(--ink-muted)] mt-1 flex items-center gap-1.5 justify-center">
               <Mail size={14} /> {email}
             </div>
           </div>
           <button
             type="button"
             onClick={() => setState("idle")}
-            className="text-xs text-[var(--muted)] hover:underline"
+            className="text-xs text-[var(--ink-muted)] hover:underline"
           >
             Use a different email
           </button>

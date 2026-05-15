@@ -73,7 +73,7 @@ export default function Home() {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="flex items-center gap-2 text-sm text-[var(--muted)]"
+          className="flex items-center gap-2 text-sm text-[var(--ink-muted)]"
         >
           <GreetIcon size={14} />
           {greeting.text}
@@ -135,17 +135,17 @@ export default function Home() {
           transition={{ delay: 0.15 }}
           className="glass p-5"
         >
-          <div className="text-sm text-[var(--muted)] mb-1">This month</div>
+          <div className="text-sm text-[var(--ink-muted)] mb-1">This month</div>
           <div className="text-3xl font-bold tabular-nums">
             <AnimatedNumber value={monthNet} format={(n) => formatMoney(n, settings.currency)} />
           </div>
           <div className="mt-3 flex gap-4 text-sm">
             <div className="flex items-center gap-1.5">
-              <ArrowDownLeft size={14} className="text-green-500" />
+              <ArrowDownLeft size={14} className="text-[var(--positive)]" />
               <span className="tabular-nums">{formatMoney(monthIncome, settings.currency)}</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <ArrowUpRight size={14} className="text-red-500" />
+              <ArrowUpRight size={14} className="text-[var(--negative)]" />
               <span className="tabular-nums">{formatMoney(monthExpense, settings.currency)}</span>
             </div>
           </div>
@@ -168,12 +168,12 @@ export default function Home() {
         >
           <div className="flex items-center justify-between px-1">
             <h2 className="text-lg font-semibold">Recent activity</h2>
-            <Link href="/transactions" className="text-sm text-[var(--muted)] hover:underline">
+            <Link href="/transactions" className="text-sm text-[var(--ink-muted)] hover:underline">
               See all
             </Link>
           </div>
           {recent.length === 0 ? (
-            <div className="glass p-8 text-center text-[var(--muted)]">
+            <div className="glass p-8 text-center text-[var(--ink-muted)]">
               No transactions yet — tap + to add your first.
             </div>
           ) : (
@@ -194,7 +194,7 @@ export default function Home() {
           <div>
             <h2 className="text-lg font-semibold px-1 mb-2">Upcoming</h2>
             {upcoming.length === 0 ? (
-              <div className="glass p-4 text-sm text-[var(--muted)]">Nothing scheduled.</div>
+              <div className="glass p-4 text-sm text-[var(--ink-muted)]">Nothing scheduled.</div>
             ) : (
               <div className="space-y-2">
                 {upcoming.map((u) => {
@@ -204,7 +204,7 @@ export default function Home() {
                       <div className="w-2 h-2 rounded-full gradient-fill pulse-dot" />
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium truncate">{u.description}</div>
-                        <div className="text-xs text-[var(--muted)]">in {daysOut}d</div>
+                        <div className="text-xs text-[var(--ink-muted)]">in {daysOut}d</div>
                       </div>
                       <div className="text-sm tabular-nums">
                         {u.type === "expense" ? "−" : "+"}
@@ -227,7 +227,7 @@ export default function Home() {
                     <Link href="/goals" key={g.id} className="glass p-3 block tap">
                       <div className="flex items-center justify-between mb-1.5">
                         <div className="text-sm font-medium">{g.name}</div>
-                        <div className="text-xs text-[var(--muted)] tabular-nums">
+                        <div className="text-xs text-[var(--ink-muted)] tabular-nums">
                           {formatMoney(g.current, settings.currency)} / {formatMoney(g.target, settings.currency)}
                         </div>
                       </div>
@@ -270,8 +270,8 @@ function QuickStat({
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay }}>
       <Link href={href} className={`tap block p-4 glass ${gradient ? "gradient-fill text-white" : ""}`}>
         <div className="flex items-center justify-between">
-          <div className={`text-xs ${gradient ? "opacity-90" : "text-[var(--muted)]"}`}>{label}</div>
-          <div className={gradient ? "opacity-90" : "text-[var(--muted)]"}>{icon}</div>
+          <div className={`text-xs ${gradient ? "opacity-90" : "text-[var(--ink-muted)]"}`}>{label}</div>
+          <div className={gradient ? "opacity-90" : "text-[var(--ink-muted)]"}>{icon}</div>
         </div>
         <div className="text-2xl font-bold mt-2 tabular-nums">{value}</div>
       </Link>

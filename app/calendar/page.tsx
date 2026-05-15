@@ -83,7 +83,7 @@ export default function CalendarPage() {
       </header>
 
       <div className="glass p-3">
-        <div className="grid grid-cols-7 gap-1 mb-2 text-center text-xs text-[var(--muted)] font-medium">
+        <div className="grid grid-cols-7 gap-1 mb-2 text-center text-xs text-[var(--ink-muted)] font-medium">
           {weekDays.map((d, i) => (
             <div key={i}>{d}</div>
           ))}
@@ -140,10 +140,10 @@ export default function CalendarPage() {
               {selected.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })}
             </h2>
             {selectedTxns.length === 0 ? (
-              <div className="glass p-6 text-center text-sm text-[var(--muted)]">Nothing on this day.</div>
+              <div className="glass p-6 text-center text-sm text-[var(--ink-muted)]">Nothing on this day.</div>
             ) : (
               <>
-                <div className="text-xs text-[var(--muted)] px-1">
+                <div className="text-xs text-[var(--ink-muted)] px-1">
                   Total: {formatMoney(selectedTxns.reduce((s, t) => s + (t.type === "income" ? t.amount : t.type === "expense" ? -t.amount : 0), 0), settings.currency)}
                 </div>
                 {selectedTxns.map((t) => (

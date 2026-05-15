@@ -82,7 +82,7 @@ export default function SettingsPage() {
           <ChevronRight size={16} className="text-[var(--ink-muted)]" />
         </Link>
         <div>
-          <div className="text-xs font-medium mb-1.5 text-[var(--muted)]">Mode (legacy — overridden by theme)</div>
+          <div className="text-xs font-medium mb-1.5 text-[var(--ink-muted)]">Mode (legacy — overridden by theme)</div>
           <div className="grid grid-cols-3 gap-2 p-1 bg-[var(--hover)] rounded-2xl">
             {(["light", "dark", "auto"] as ThemeMode[]).map((m) => {
               const Icon = m === "light" ? Sun : m === "dark" ? Moon : Monitor;
@@ -95,7 +95,7 @@ export default function SettingsPage() {
                   {settings.themeMode === m && (
                     <motion.div layoutId="theme-pill" className="absolute inset-0 gradient-fill rounded-xl -z-10" />
                   )}
-                  <span className={`inline-flex items-center gap-1.5 ${settings.themeMode === m ? "text-white" : "text-[var(--muted)]"}`}>
+                  <span className={`inline-flex items-center gap-1.5 ${settings.themeMode === m ? "text-white" : "text-[var(--ink-muted)]"}`}>
                     <Icon size={14} /> {m}
                   </span>
                 </button>
@@ -105,7 +105,7 @@ export default function SettingsPage() {
         </div>
 
         <div>
-          <div className="text-xs font-medium mb-1.5 text-[var(--muted)]">Gradient presets</div>
+          <div className="text-xs font-medium mb-1.5 text-[var(--ink-muted)]">Gradient presets</div>
           <div className="grid grid-cols-4 gap-2">
             {PRESETS.map((p) => (
               <button
@@ -195,11 +195,11 @@ export default function SettingsPage() {
         <div className="text-sm font-semibold">More</div>
         <Link href="/budgets" className="flex items-center justify-between p-3 -mx-2 rounded-xl hover:bg-[var(--hover)] tap">
           <span>Budgets</span>
-          <ChevronRight size={16} className="text-[var(--muted)]" />
+          <ChevronRight size={16} className="text-[var(--ink-muted)]" />
         </Link>
         <Link href="/insights" className="flex items-center justify-between p-3 -mx-2 rounded-xl hover:bg-[var(--hover)] tap">
           <span>AI insights</span>
-          <ChevronRight size={16} className="text-[var(--muted)]" />
+          <ChevronRight size={16} className="text-[var(--ink-muted)]" />
         </Link>
       </section>
 
@@ -231,7 +231,7 @@ export default function SettingsPage() {
             <RotateCcw size={14} className="inline mr-1" /> Reset
           </Button>
         </div>
-        <div className="text-xs text-[var(--muted)]">
+        <div className="text-xs text-[var(--ink-muted)]">
           Your data is stored locally on this device. Export regularly to back it up.
         </div>
       </section>
@@ -309,7 +309,7 @@ function PinForm({ onDone }: { onDone: () => void }) {
           onChange={(e) => setB(e.target.value)}
         />
       </Field>
-      {err && <div className="text-sm text-red-500">{err}</div>}
+      {err && <div className="text-sm text-[var(--negative)]">{err}</div>}
       <div className="flex gap-2">
         <Button type="button" variant="ghost" onClick={onDone} className="flex-1">Cancel</Button>
         <Button type="submit" className="flex-1">Save</Button>

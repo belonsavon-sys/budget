@@ -131,7 +131,7 @@ export default function TransactionForm({
                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
               />
             )}
-            <span className={type === t ? "text-white" : "text-[var(--muted)]"}>{t}</span>
+            <span className={type === t ? "text-white" : "text-[var(--ink-muted)]"}>{t}</span>
           </button>
         ))}
       </div>
@@ -258,7 +258,7 @@ export default function TransactionForm({
       </Field>
 
       <div>
-        <div className="text-xs font-medium mb-1.5 text-[var(--muted)]">Splits (optional)</div>
+        <div className="text-xs font-medium mb-1.5 text-[var(--ink-muted)]">Splits (optional)</div>
         <AnimatePresence initial={false}>
           {splits.map((s, i) => (
             <motion.div
@@ -311,14 +311,14 @@ export default function TransactionForm({
           <Plus size={14} className="inline mr-1" />Add split
         </Button>
         {splits.length > 0 && (
-          <div className={`text-xs mt-2 ${splitMismatch ? "text-amber-500" : "text-[var(--muted)]"}`}>
+          <div className={`text-xs mt-2 ${splitMismatch ? "text-amber-500" : "text-[var(--ink-muted)]"}`}>
             Splits total {formatMoney(totalSplits, currency)} of {formatMoney(parseFloat(amount || "0"), currency)}
           </div>
         )}
       </div>
 
       <div>
-        <div className="text-xs font-medium mb-1.5 text-[var(--muted)]">Attachments (receipts)</div>
+        <div className="text-xs font-medium mb-1.5 text-[var(--ink-muted)]">Attachments (receipts)</div>
         <div className="flex flex-wrap gap-2 mb-2">
           {attachments.map((a) => (
             <div key={a.id} className="relative">

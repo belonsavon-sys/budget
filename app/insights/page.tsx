@@ -159,7 +159,7 @@ export default function InsightsPage() {
           <Sparkles size={12} /> AI insight
         </div>
         <h1 className="text-3xl font-bold tracking-tight gradient-text">Insights</h1>
-        <p className="text-sm text-[var(--muted)] mt-1">Patterns and nudges from your data</p>
+        <p className="text-sm text-[var(--ink-muted)] mt-1">Patterns and nudges from your data</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -184,7 +184,7 @@ export default function InsightsPage() {
             </div>
             <div className="flex-1">
               <div className="font-semibold">{i.title}</div>
-              <div className="text-sm text-[var(--muted)] mt-1">{i.body}</div>
+              <div className="text-sm text-[var(--ink-muted)] mt-1">{i.body}</div>
             </div>
           </motion.div>
         ))}

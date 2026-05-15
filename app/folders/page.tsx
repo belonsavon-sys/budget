@@ -39,11 +39,11 @@ export default function FoldersPage() {
     <div className="space-y-6 pb-12">
       <header className="pt-2 md:pt-6">
         <h1 className="text-3xl font-bold tracking-tight gradient-text">Folders</h1>
-        <p className="text-sm text-[var(--muted)] mt-1">Auto-organized by year & month</p>
+        <p className="text-sm text-[var(--ink-muted)] mt-1">Auto-organized by year & month</p>
       </header>
 
       {tree.length === 0 && (
-        <div className="glass p-8 text-center text-[var(--muted)]">
+        <div className="glass p-8 text-center text-[var(--ink-muted)]">
           No transactions yet.
         </div>
       )}
@@ -75,7 +75,7 @@ export default function FoldersPage() {
                     </div>
                     <div className="flex-1">
                       <div className="font-medium">{monthName(m.month)}</div>
-                      <div className="text-xs text-[var(--muted)]">{m.count} transactions</div>
+                      <div className="text-xs text-[var(--ink-muted)]">{m.count} transactions</div>
                     </div>
                     <div className="text-right">
                       <div
@@ -86,7 +86,7 @@ export default function FoldersPage() {
                         {formatMoney(Math.abs(net), settings.currency)}
                       </div>
                     </div>
-                    <ChevronRight size={16} className="text-[var(--muted)]" />
+                    <ChevronRight size={16} className="text-[var(--ink-muted)]" />
                   </Link>
                 </motion.div>
               );

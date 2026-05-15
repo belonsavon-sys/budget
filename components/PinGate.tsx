@@ -51,7 +51,7 @@ export default function PinGate({ children }: { children: React.ReactNode }) {
             }}
             className="text-center text-2xl tracking-[0.5em] px-4 py-3 rounded-2xl bg-[var(--hover)] w-40"
           />
-          {error && <div className="text-sm text-red-500">{error}</div>}
+          {error && <div className="text-sm text-[var(--negative)]">{error}</div>}
         </div>
       </div>
     );

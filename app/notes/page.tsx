@@ -82,7 +82,7 @@ export default function NotesPage() {
                         e.stopPropagation();
                         if (confirm("Delete this note?")) removeNote(n.id);
                       }}
-                      className="tap p-1.5 rounded-full hover:bg-red-500/15 text-red-500"
+                      className="tap p-1.5 rounded-full hover:bg-[color-mix(in_srgb,var(--negative)_15%,transparent)] text-[var(--negative)]"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -100,11 +100,11 @@ export default function NotesPage() {
                     rows={6}
                   />
                 ) : (
-                  <div className="text-sm text-[var(--muted)] whitespace-pre-wrap line-clamp-6">
+                  <div className="text-sm text-[var(--ink-muted)] whitespace-pre-wrap line-clamp-6">
                     {n.content || "Tap to write…"}
                   </div>
                 )}
-                <div className="text-[10px] text-[var(--muted)] mt-2">
+                <div className="text-[10px] text-[var(--ink-muted)] mt-2">
                   {new Date(n.updatedAt).toLocaleString()}
                 </div>
               </motion.div>
@@ -114,7 +114,7 @@ export default function NotesPage() {
       </div>
 
       {notes.length === 0 && (
-        <div className="glass p-10 text-center text-[var(--muted)]">
+        <div className="glass p-10 text-center text-[var(--ink-muted)]">
           A space for free-form thoughts about your money.
         </div>
       )}

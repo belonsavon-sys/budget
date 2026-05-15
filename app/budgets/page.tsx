@@ -46,7 +46,7 @@ export default function BudgetsPage() {
       </header>
 
       {budgets.length === 0 && (
-        <div className="glass p-10 text-center text-[var(--muted)]">
+        <div className="glass p-10 text-center text-[var(--ink-muted)]">
           Set spending limits per category to track them.
         </div>
       )}
@@ -69,10 +69,10 @@ export default function BudgetsPage() {
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full" style={{ background: cat?.color }} />
                   <span className="font-semibold">{cat?.name ?? "Category"}</span>
-                  <span className="text-xs text-[var(--muted)] capitalize">{b.period}</span>
+                  <span className="text-xs text-[var(--ink-muted)] capitalize">{b.period}</span>
                 </div>
                 <button
-                  className="tap p-2 rounded-full hover:bg-red-500/15 text-red-500"
+                  className="tap p-2 rounded-full hover:bg-[color-mix(in_srgb,var(--negative)_15%,transparent)] text-[var(--negative)]"
                   onClick={() => {
                     if (confirm("Delete budget?")) removeBudget(b.id);
                   }}
@@ -81,10 +81,10 @@ export default function BudgetsPage() {
                 </button>
               </div>
               <div className="flex items-baseline justify-between mt-3">
-                <div className={`text-2xl font-bold tabular-nums ${over ? "text-red-500" : ""}`}>
+                <div className={`text-2xl font-bold tabular-nums ${over ? "text-[var(--negative)]" : ""}`}>
                   {formatMoney(spent, settings.currency)}
                 </div>
-                <div className="text-sm text-[var(--muted)] tabular-nums">/ {formatMoney(b.amount, settings.currency)}</div>
+                <div className="text-sm text-[var(--ink-muted)] tabular-nums">/ {formatMoney(b.amount, settings.currency)}</div>
               </div>
               <div className="h-3 rounded-full bg-[var(--hover)] overflow-hidden mt-2">
                 <motion.div
@@ -95,7 +95,7 @@ export default function BudgetsPage() {
                 />
               </div>
               {over && (
-                <div className="text-xs text-red-500 mt-2">
+                <div className="text-xs text-[var(--negative)] mt-2">
                   Over budget by {formatMoney(spent - b.amount, settings.currency)}
                 </div>
               )}

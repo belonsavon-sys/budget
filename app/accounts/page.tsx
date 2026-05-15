@@ -35,7 +35,7 @@ export default function AccountsPage() {
       <header className="pt-2 md:pt-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight gradient-text">Accounts</h1>
-          <p className="text-sm text-[var(--muted)] mt-1">Net worth: {formatMoney(total, settings.currency)}</p>
+          <p className="text-sm text-[var(--ink-muted)] mt-1">Net worth: {formatMoney(total, settings.currency)}</p>
         </div>
         <Button onClick={() => { setEditing(null); setOpen(true); }}>
           <Plus size={16} className="inline mr-1" />Add
@@ -68,7 +68,7 @@ export default function AccountsPage() {
                   </div>
                   <div>
                     <div className="font-semibold">{a.name}</div>
-                    <div className="text-xs text-[var(--muted)] capitalize">{a.type}</div>
+                    <div className="text-xs text-[var(--ink-muted)] capitalize">{a.type}</div>
                   </div>
                 </div>
                 <div className="flex gap-1">
@@ -82,7 +82,7 @@ export default function AccountsPage() {
                     onClick={() => {
                       if (confirm(`Delete "${a.name}"? Transactions will remain.`)) removeAccount(a.id);
                     }}
-                    className="tap p-2 rounded-full hover:bg-red-500/15 text-red-500"
+                    className="tap p-2 rounded-full hover:bg-[color-mix(in_srgb,var(--negative)_15%,transparent)] text-[var(--negative)]"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -93,7 +93,7 @@ export default function AccountsPage() {
                   {formatMoney(bal, a.currency)}
                 </div>
                 {settings.showProjected && projectedBal !== bal && (
-                  <div className="text-xs text-[var(--muted)] mt-1">
+                  <div className="text-xs text-[var(--ink-muted)] mt-1">
                     projected: {formatMoney(projectedBal, a.currency)}
                   </div>
                 )}

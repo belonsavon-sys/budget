@@ -56,12 +56,12 @@ export default function TransactionsPage() {
     <div className="space-y-6 pb-12">
       <header className="pt-2 md:pt-6">
         <h1 className="text-3xl font-bold tracking-tight gradient-text">Activity</h1>
-        <p className="text-sm text-[var(--muted)] mt-1">{filtered.length} transactions</p>
+        <p className="text-sm text-[var(--ink-muted)] mt-1">{filtered.length} transactions</p>
       </header>
 
       <div className="glass p-3 space-y-3">
         <div className="relative">
-          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--muted)]" />
+          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--ink-muted)]" />
           <Input
             value={q}
             onChange={(e) => setQ(e.target.value)}
@@ -102,7 +102,7 @@ export default function TransactionsPage() {
             <option value="projected">Projected</option>
           </Select>
         </div>
-        <label className="flex items-center gap-2 text-sm text-[var(--muted)] px-2">
+        <label className="flex items-center gap-2 text-sm text-[var(--ink-muted)] px-2">
           <input
             type="checkbox"
             checked={showProjected}
@@ -114,7 +114,7 @@ export default function TransactionsPage() {
 
       <div className="space-y-6">
         {groups.length === 0 ? (
-          <div className="glass p-10 text-center text-[var(--muted)]">No results.</div>
+          <div className="glass p-10 text-center text-[var(--ink-muted)]">No results.</div>
         ) : (
           groups.map(([k, g], idx) => {
             const income = g.items.filter((t) => t.type === "income").reduce((s, t) => s + t.amount, 0);
@@ -129,9 +129,9 @@ export default function TransactionsPage() {
               >
                 <div className="flex items-baseline justify-between px-1">
                   <h2 className="text-lg font-semibold">
-                    {monthName(g.month)} <span className="text-[var(--muted)]">{g.year}</span>
+                    {monthName(g.month)} <span className="text-[var(--ink-muted)]">{g.year}</span>
                   </h2>
-                  <div className="text-xs text-[var(--muted)] tabular-nums">
+                  <div className="text-xs text-[var(--ink-muted)] tabular-nums">
                     +{formatMoney(income, settings.currency)} · −{formatMoney(expense, settings.currency)}
                   </div>
                 </div>

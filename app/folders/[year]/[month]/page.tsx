@@ -54,27 +54,27 @@ export default function FolderPage({
 
   return (
     <div className="space-y-6 pb-12">
-      <Link href="/folders" className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--fg)]">
+      <Link href="/folders" className="inline-flex items-center gap-1 text-sm text-[var(--ink-muted)] hover:text-[var(--fg)]">
         <ArrowLeft size={14} /> Folders
       </Link>
       <header className="pt-1">
         <h1 className="text-3xl font-bold tracking-tight">
           <span className="gradient-text">{monthName(m)}</span>{" "}
-          <span className="text-[var(--muted)]">{y}</span>
+          <span className="text-[var(--ink-muted)]">{y}</span>
         </h1>
       </header>
 
       <div className="grid grid-cols-3 gap-3">
         <div className="glass p-4">
-          <div className="text-xs text-[var(--muted)]">Income</div>
-          <div className="text-2xl font-bold tabular-nums text-green-500">{formatMoney(income, settings.currency)}</div>
+          <div className="text-xs text-[var(--ink-muted)]">Income</div>
+          <div className="text-2xl font-bold tabular-nums text-[var(--positive)]">{formatMoney(income, settings.currency)}</div>
         </div>
         <div className="glass p-4">
-          <div className="text-xs text-[var(--muted)]">Expense</div>
-          <div className="text-2xl font-bold tabular-nums text-red-500">{formatMoney(expense, settings.currency)}</div>
+          <div className="text-xs text-[var(--ink-muted)]">Expense</div>
+          <div className="text-2xl font-bold tabular-nums text-[var(--negative)]">{formatMoney(expense, settings.currency)}</div>
         </div>
         <div className="glass p-4">
-          <div className="text-xs text-[var(--muted)]">Net</div>
+          <div className="text-xs text-[var(--ink-muted)]">Net</div>
           <div className="text-2xl font-bold tabular-nums" style={{ color: income - expense >= 0 ? "#22c55e" : "#ef4444" }}>
             {formatMoney(income - expense, settings.currency)}
           </div>
@@ -106,7 +106,7 @@ export default function FolderPage({
           <TransactionRow key={t.id} txn={t} />
         ))}
         {items.length === 0 && (
-          <div className="glass p-6 text-center text-[var(--muted)]">Empty folder.</div>
+          <div className="glass p-6 text-center text-[var(--ink-muted)]">Empty folder.</div>
         )}
       </div>
     </div>
