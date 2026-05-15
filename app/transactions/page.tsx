@@ -4,10 +4,11 @@ import { useState, useMemo } from "react";
 import { useStore } from "@/lib/store";
 import TransactionRow from "@/components/TransactionRow";
 import { Field, Input, Select } from "@/components/Field";
-import { Search, Filter } from "lucide-react";
+import { Search, Wallet } from "lucide-react";
 import { folderKey, monthName, formatMoney } from "@/lib/utils";
 import { motion } from "framer-motion";
 import BulkBar from "@/components/Transactions/BulkBar";
+import EmptyState from "@/components/Common/EmptyState";
 
 export default function TransactionsPage() {
   const transactions = useStore((s) => s.transactions);
@@ -127,7 +128,11 @@ export default function TransactionsPage() {
 
       <div className="space-y-6">
         {groups.length === 0 ? (
-          <div className="glass p-10 text-center text-[var(--ink-muted)]">No results.</div>
+          <EmptyState
+            icon={<Wallet size={24} />}
+            title={transactions.length === 0 ? "No transactions yet" : "No results"}
+            description={transactions.length === 0 ? "Tap + to add your first transaction." : "Try adjusting the filters."}
+          />
         ) : (
           groups.map(([k, g], idx) => {
             const income = g.items.filter((t) => t.type === "income").reduce((s, t) => s + t.amount, 0);

@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Trash2, Pin, PinOff } from "lucide-react";
+import { Plus, Trash2, Pin, PinOff, NotebookPen } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { Field, Input, Button } from "@/components/Field";
 import MarkdownView from "@/components/Notes/MarkdownView";
 import MentionAutocomplete from "@/components/Notes/MentionAutocomplete";
+import EmptyState from "@/components/Common/EmptyState";
 
 export default function NotesPage() {
   const notes = useStore((s) => s.notes);
@@ -126,9 +127,12 @@ export default function NotesPage() {
       </div>
 
       {notes.length === 0 && (
-        <div className="glass p-10 text-center text-[var(--ink-muted)]">
-          A space for free-form thoughts about your money. Supports Markdown + @transaction mentions.
-        </div>
+        <EmptyState
+          icon={<NotebookPen size={24} />}
+          title="No notes yet"
+          description="A space for free-form thoughts about your money. Supports Markdown + @transaction mentions."
+          action={{ label: "New note", onClick: newNote }}
+        />
       )}
     </div>
   );

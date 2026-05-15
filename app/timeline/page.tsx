@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, Suspense } from "react";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { useStore } from "@/lib/store";
@@ -9,6 +9,7 @@ import type { ProjectionHorizon } from "@/lib/types";
 import TimeMachine from "@/components/TimeMachine";
 import ScenarioTray from "@/components/Scenarios/ScenarioTray";
 import ScenarioInspector from "@/components/Scenarios/ScenarioInspector";
+import Skeleton from "@/components/Common/Skeleton";
 
 export default function TimelinePage() {
   const settings = useStore((s) => s.settings);
@@ -47,19 +48,21 @@ export default function TimelinePage() {
           Timeline
         </h1>
 
-        <TimeMachine
-          snapshot={snapshot}
-          currency={settings.currency}
-          horizon={horizon}
-          onHorizonChange={setHorizon}
-          scenarios={activeScenarios}
-          onScenarioDrop={(templateId, dateIso) =>
-            setInspectorState({ open: true, templateId, dropDate: dateIso })
-          }
-          onScenarioClick={(id) => setInspectorState({ open: true, scenarioId: id })}
-          height={520}
-          expanded
-        />
+        <Suspense fallback={<Skeleton height={520} />}>
+          <TimeMachine
+            snapshot={snapshot}
+            currency={settings.currency}
+            horizon={horizon}
+            onHorizonChange={setHorizon}
+            scenarios={activeScenarios}
+            onScenarioDrop={(templateId, dateIso) =>
+              setInspectorState({ open: true, templateId, dropDate: dateIso })
+            }
+            onScenarioClick={(id) => setInspectorState({ open: true, scenarioId: id })}
+            height={520}
+            expanded
+          />
+        </Suspense>
 
         {activeScenarios.length > 0 && (
           <div className="glass p-4">

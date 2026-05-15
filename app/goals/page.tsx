@@ -10,6 +10,7 @@ import type { SavingsGoal } from "@/lib/types";
 import Modal from "@/components/Modal";
 import { Field, Input, Button } from "@/components/Field";
 import GoalForecast from "@/components/Goals/GoalForecast";
+import EmptyState from "@/components/Common/EmptyState";
 
 export default function GoalsPage() {
   const goals = useStore((s) => s.goals);
@@ -43,9 +44,12 @@ export default function GoalsPage() {
       </header>
 
       {goals.length === 0 && (
-        <div className="glass p-10 text-center text-[var(--ink-muted)]">
-          No goals yet. Set a target to start saving toward something.
-        </div>
+        <EmptyState
+          icon={<Target size={24} />}
+          title="No goals yet"
+          description="Set a target to start saving toward something."
+          action={{ label: "New goal", onClick: () => { setOpen(true); } }}
+        />
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

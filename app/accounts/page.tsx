@@ -9,6 +9,7 @@ import type { Account, AccountType, Currency } from "@/lib/types";
 import Modal from "@/components/Modal";
 import { Field, Input, Select, Button } from "@/components/Field";
 import AccountSparkline from "@/components/Accounts/AccountSparkline";
+import EmptyState from "@/components/Common/EmptyState";
 
 const TYPE_ICONS: Record<AccountType, React.ReactNode> = {
   checking: <Wallet size={18} />,
@@ -42,6 +43,15 @@ export default function AccountsPage() {
           <Plus size={16} className="inline mr-1" />Add
         </Button>
       </header>
+
+      {accounts.length === 0 && (
+        <EmptyState
+          icon={<PiggyBank size={24} />}
+          title="No accounts yet"
+          description="Add a checking, savings, or investment account to get started."
+          action={{ label: "Add account", onClick: () => { setEditing(null); setOpen(true); } }}
+        />
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {accounts.map((a, i) => {

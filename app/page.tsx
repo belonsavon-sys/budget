@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, Suspense } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useStore } from "@/lib/store";
@@ -13,6 +13,7 @@ import TimeMachine from "@/components/TimeMachine";
 import ScenarioTray from "@/components/Scenarios/ScenarioTray";
 import ScenarioInspector from "@/components/Scenarios/ScenarioInspector";
 import TransactionRow from "@/components/TransactionRow";
+import Skeleton from "@/components/Common/Skeleton";
 
 export default function Home() {
   const settings = useStore((s) => s.settings);
@@ -62,18 +63,20 @@ export default function Home() {
       <div className="space-y-6 pb-12 md:pr-60">
         <CopilotGreeting />
 
-        <TimeMachine
-          snapshot={snapshot}
-          currency={settings.currency}
-          horizon={horizon}
-          onHorizonChange={setHorizon}
-          scenarios={activeScenarios}
-          onScenarioDrop={(templateId, dateIso) =>
-            setInspectorState({ open: true, templateId, dropDate: dateIso })
-          }
-          onScenarioClick={(id) => setInspectorState({ open: true, scenarioId: id })}
-          height={280}
-        />
+        <Suspense fallback={<Skeleton height={280} />}>
+          <TimeMachine
+            snapshot={snapshot}
+            currency={settings.currency}
+            horizon={horizon}
+            onHorizonChange={setHorizon}
+            scenarios={activeScenarios}
+            onScenarioDrop={(templateId, dateIso) =>
+              setInspectorState({ open: true, templateId, dropDate: dateIso })
+            }
+            onScenarioClick={(id) => setInspectorState({ open: true, scenarioId: id })}
+            height={280}
+          />
+        </Suspense>
 
         <AmbientTiles />
 

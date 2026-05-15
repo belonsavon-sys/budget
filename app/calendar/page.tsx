@@ -2,12 +2,13 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { formatMoney, isSameDay } from "@/lib/utils";
 import TransactionRow from "@/components/TransactionRow";
 import Heatmap from "@/components/Calendar/Heatmap";
 import ScenarioInspector from "@/components/Scenarios/ScenarioInspector";
+import EmptyState from "@/components/Common/EmptyState";
 
 function toIso(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -102,12 +103,15 @@ export default function CalendarPage() {
               {selected.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })}
             </h2>
             {selectedTxns.length === 0 ? (
-              <div className="glass p-6 text-center text-sm text-[var(--ink-muted)]">
-                Nothing on this day.{" "}
-                {toIso(selected) > toIso(new Date()) && (
-                  <span className="text-[var(--accent)]">Drop a scenario blueprint to plan ahead.</span>
-                )}
-              </div>
+              <EmptyState
+                icon={<CalendarDays size={24} />}
+                title="Nothing on this day"
+                description={
+                  toIso(selected) > toIso(new Date())
+                    ? "Drop a scenario blueprint to plan ahead."
+                    : "No transactions recorded for this day."
+                }
+              />
             ) : (
               <>
                 <div className="text-xs text-[var(--ink-muted)] px-1">
