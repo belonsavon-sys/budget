@@ -14,6 +14,8 @@ import { AuthProvider } from "@/lib/auth/context";
 import { HouseholdProvider } from "@/lib/household/context";
 import MigrationPrompt from "@/components/Migration/MigrationPrompt";
 import SwRegister from "@/components/Sw/SwRegister";
+import CmdK from "@/components/Copilot/CmdK";
+import UndoCard from "@/components/Copilot/UndoCard";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
@@ -75,6 +77,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <QuickAddFAB />
             </PinGate>
             <MigrationPrompt />
+            <CmdK />
+            <UndoCard />
             <SwRegister />
           </HouseholdProvider>
         </AuthProvider>
