@@ -31,4 +31,10 @@
   --grain-opacity: 0;
   --ambient-svg-opacity: 0;
   color-scheme: light;
+
+  /* Derived utility tokens */
+  --hover: rgba(13, 20, 33, 0.06);
+  --hairline: rgba(13, 20, 33, 0.12);
+  --card-border: rgba(13, 20, 33, 0.12);
+  --fg: #0d1421;
 }

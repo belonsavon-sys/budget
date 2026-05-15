@@ -292,10 +292,11 @@ export default function ReportsPage() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass p-4 h-72"
+        className="glass p-4"
       >
         <div className="text-sm font-medium mb-2">Cash flow over time</div>
-        <ResponsiveContainer width="100%" height="90%">
+        <div style={{ minHeight: 280 }}>
+        <ResponsiveContainer width="100%" height={280}>
           <LineChart data={monthlyData}>
             <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
             <XAxis dataKey="month" fontSize={11} stroke="currentColor" />
@@ -310,6 +311,7 @@ export default function ReportsPage() {
             <Line type="monotone" dataKey="net" stroke="var(--grad-via)" strokeWidth={2.5} dot={false} />
           </LineChart>
         </ResponsiveContainer>
+        </div>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -319,7 +321,8 @@ export default function ReportsPage() {
           className="glass p-4 h-80"
         >
           <div className="text-sm font-medium mb-2">By category</div>
-          <ResponsiveContainer width="100%" height="90%">
+          <div style={{ minHeight: 280 }}>
+          <ResponsiveContainer width="100%" height={280}>
             <PieChart>
               <Pie
                 data={catData}
@@ -341,6 +344,7 @@ export default function ReportsPage() {
               />
             </PieChart>
           </ResponsiveContainer>
+          </div>
         </motion.div>
 
         <motion.div
@@ -349,7 +353,8 @@ export default function ReportsPage() {
           className="glass p-4 h-80"
         >
           <div className="text-sm font-medium mb-2">Compare periods</div>
-          <ResponsiveContainer width="100%" height="90%">
+          <div style={{ minHeight: 280 }}>
+          <ResponsiveContainer width="100%" height={280}>
             <BarChart data={compareData}>
               <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
               <XAxis dataKey="name" fontSize={11} stroke="currentColor" />
@@ -363,6 +368,7 @@ export default function ReportsPage() {
               <Bar dataKey="expense" fill="#ef4444" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
+          </div>
         </motion.div>
       </div>
     </div>

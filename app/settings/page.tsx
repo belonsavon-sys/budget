@@ -2,24 +2,12 @@
 
 import { useRef, useState } from "react";
 import { useStore } from "@/lib/store";
-import type { Currency, ThemeMode } from "@/lib/types";
+import type { Currency } from "@/lib/types";
 import { Field, Input, Select, Button } from "@/components/Field";
 import { downloadFile, readFileAsText, sha256 } from "@/lib/utils";
-import { Download, Upload, Lock, Unlock, Palette, Sun, Moon, Monitor, ChevronRight, RotateCcw, Brain, Users } from "lucide-react";
+import { Download, Upload, Lock, Unlock, Palette, ChevronRight, RotateCcw, Brain, Users } from "lucide-react";
 import Link from "next/link";
 import Modal from "@/components/Modal";
-import { motion } from "framer-motion";
-
-const PRESETS: { name: string; from: string; via: string; to: string }[] = [
-  { name: "Sunset", from: "#a78bfa", via: "#f472b6", to: "#fb923c" },
-  { name: "Ocean", from: "#60a5fa", via: "#22d3ee", to: "#34d399" },
-  { name: "Forest", from: "#34d399", via: "#84cc16", to: "#facc15" },
-  { name: "Berry", from: "#ec4899", via: "#a855f7", to: "#6366f1" },
-  { name: "Lava", from: "#f87171", via: "#fb923c", to: "#facc15" },
-  { name: "Aurora", from: "#22d3ee", via: "#a855f7", to: "#f472b6" },
-  { name: "Mint", from: "#a7f3d0", via: "#67e8f9", to: "#c4b5fd" },
-  { name: "Charcoal", from: "#475569", via: "#0f172a", to: "#1e293b" },
-];
 
 export default function SettingsPage() {
   const settings = useStore((s) => s.settings);
@@ -81,71 +69,6 @@ export default function SettingsPage() {
           </div>
           <ChevronRight size={16} className="text-[var(--ink-muted)]" />
         </Link>
-        <div>
-          <div className="text-xs font-medium mb-1.5 text-[var(--ink-muted)]">Mode (legacy — overridden by theme)</div>
-          <div className="grid grid-cols-3 gap-2 p-1 bg-[var(--hover)] rounded-2xl">
-            {(["light", "dark", "auto"] as ThemeMode[]).map((m) => {
-              const Icon = m === "light" ? Sun : m === "dark" ? Moon : Monitor;
-              return (
-                <button
-                  key={m}
-                  onClick={() => updateSettings({ themeMode: m })}
-                  className="relative tap py-2 text-sm font-medium capitalize rounded-xl"
-                >
-                  {settings.themeMode === m && (
-                    <motion.div layoutId="theme-pill" className="absolute inset-0 gradient-fill rounded-xl -z-10" />
-                  )}
-                  <span className={`inline-flex items-center gap-1.5 ${settings.themeMode === m ? "text-white" : "text-[var(--ink-muted)]"}`}>
-                    <Icon size={14} /> {m}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div>
-          <div className="text-xs font-medium mb-1.5 text-[var(--ink-muted)]">Gradient presets</div>
-          <div className="grid grid-cols-4 gap-2">
-            {PRESETS.map((p) => (
-              <button
-                key={p.name}
-                onClick={() => updateSettings({ gradientFrom: p.from, gradientVia: p.via, gradientTo: p.to })}
-                className="tap rounded-2xl h-14 relative text-white text-xs font-medium overflow-hidden"
-                style={{ background: `linear-gradient(120deg, ${p.from}, ${p.via}, ${p.to})` }}
-              >
-                {p.name}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2">
-          <Field label="From">
-            <input
-              type="color"
-              value={settings.gradientFrom}
-              onChange={(e) => updateSettings({ gradientFrom: e.target.value })}
-              className="w-full h-12 rounded-2xl cursor-pointer"
-            />
-          </Field>
-          <Field label="Via">
-            <input
-              type="color"
-              value={settings.gradientVia}
-              onChange={(e) => updateSettings({ gradientVia: e.target.value })}
-              className="w-full h-12 rounded-2xl cursor-pointer"
-            />
-          </Field>
-          <Field label="To">
-            <input
-              type="color"
-              value={settings.gradientTo}
-              onChange={(e) => updateSettings({ gradientTo: e.target.value })}
-              className="w-full h-12 rounded-2xl cursor-pointer"
-            />
-          </Field>
-        </div>
       </section>
 
       <section className="glass p-5 space-y-4">
