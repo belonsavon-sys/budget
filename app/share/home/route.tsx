@@ -38,14 +38,14 @@ export async function GET(req: Request) {
           fontFamily: "Georgia",
         }}
       >
-        <div style={{ fontSize: 24, letterSpacing: 4, opacity: 0.55, textTransform: "uppercase" }}>
+        <div style={{ display: "flex", fontSize: 24, letterSpacing: 4, opacity: 0.55, textTransform: "uppercase" }}>
           Net worth
         </div>
-        <div style={{ fontSize: 192, fontWeight: 700, lineHeight: 1, marginTop: 24 }}>
+        <div style={{ display: "flex", fontSize: 192, fontWeight: 700, lineHeight: 1, marginTop: 24 }}>
           {fmt(value, currency)}
         </div>
-        <div style={{ marginTop: 48, fontSize: 28, opacity: 0.6 }}>
-          budget · {t.name}
+        <div style={{ display: "flex", marginTop: 48, fontSize: 28, opacity: 0.6 }}>
+          {`budget · ${t.name}`}
         </div>
       </div>
     ),
