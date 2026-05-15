@@ -1,12 +1,5 @@
 @import "tailwindcss";
 
-/* Import all theme token sets — only one activates via data-theme on <html> */
-@import "./themes/architectural.css";
-@import "./themes/newsroom.css";
-@import "./themes/ledger.css";
-@import "./themes/terminal.css";
-@import "./themes/deep-space.css";
-
 /* Tailwind v4 theme bridge — map our tokens to Tailwind's color/font names */
 @theme inline {
   --color-background: var(--bg);

@@ -1,6 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Cormorant_Garamond, Playfair_Display, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import "./themes/architectural.css";
+import "./themes/newsroom.css";
+import "./themes/ledger.css";
+import "./themes/terminal.css";
+import "./themes/deep-space.css";
 import ThemeProvider from "@/components/Theme/ThemeProvider";
 import Nav from "@/components/Nav";
 import QuickAddFAB from "@/components/QuickAddFAB";
