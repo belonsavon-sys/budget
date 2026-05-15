@@ -122,6 +122,8 @@ export default function Sankey({ nodes, links }: Props) {
   const nodeRects = nodes.map((n) => {
     const pos = positions[n.id];
     if (!pos) return null;
+    // Text offset — give a bit more breathing room
+    const textOffset = NODE_WIDTH + 5;
     return (
       <g key={n.id}>
         <rect
@@ -131,13 +133,18 @@ export default function Sankey({ nodes, links }: Props) {
           height={pos.h}
           rx={NODE_WIDTH / 2}
           fill={n.color}
-          fillOpacity={0.9}
+          fillOpacity={0.85}
+          stroke="var(--ink)"
+          strokeWidth={0.5}
+          strokeOpacity={0.2}
         />
         <text
-          x={n.column === 1 ? pos.x : n.column === 0 ? pos.x - NODE_WIDTH : pos.x + NODE_WIDTH}
+          x={n.column === 1 ? pos.x : n.column === 0 ? pos.x - textOffset : pos.x + textOffset}
           y={pos.y + pos.h / 2 + 10 + 4}
           textAnchor={n.column === 0 ? "end" : n.column === 2 ? "start" : "middle"}
           fontSize={11}
+          fontFamily="var(--font-display, Georgia, serif)"
+          fontStyle="italic"
           fill="currentColor"
           fillOpacity={0.8}
         >
@@ -149,7 +156,6 @@ export default function Sankey({ nodes, links }: Props) {
 
   return (
     <div className="glass p-4">
-      <div className="text-sm font-medium mb-3">Money flow</div>
       <div className="overflow-x-auto">
         <svg
           viewBox={`0 0 ${SVG_W} ${SVG_H}`}
@@ -160,10 +166,10 @@ export default function Sankey({ nodes, links }: Props) {
         >
           {linkPaths}
           {nodeRects}
-          {/* Column labels */}
-          <text x={COL_X[0]} y={6} textAnchor="middle" fontSize={10} fill="currentColor" fillOpacity={0.5}>Income</text>
-          <text x={COL_X[1]} y={6} textAnchor="middle" fontSize={10} fill="currentColor" fillOpacity={0.5}>Total</text>
-          <text x={COL_X[2]} y={6} textAnchor="middle" fontSize={10} fill="currentColor" fillOpacity={0.5}>Expenses</text>
+          {/* Column labels — uppercase tracking small caps */}
+          <text x={COL_X[0]} y={6} textAnchor="middle" fontSize={9} fontFamily="var(--font-display, Georgia, serif)" fill="currentColor" fillOpacity={0.45} letterSpacing="0.1em">INCOME</text>
+          <text x={COL_X[1]} y={6} textAnchor="middle" fontSize={9} fontFamily="var(--font-display, Georgia, serif)" fill="currentColor" fillOpacity={0.45} letterSpacing="0.1em">TOTAL</text>
+          <text x={COL_X[2]} y={6} textAnchor="middle" fontSize={9} fontFamily="var(--font-display, Georgia, serif)" fill="currentColor" fillOpacity={0.45} letterSpacing="0.1em">EXPENSES</text>
         </svg>
       </div>
     </div>

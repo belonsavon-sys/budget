@@ -10,6 +10,7 @@ import TimeMachine from "@/components/TimeMachine";
 import ScenarioTray from "@/components/Scenarios/ScenarioTray";
 import ScenarioInspector from "@/components/Scenarios/ScenarioInspector";
 import Skeleton from "@/components/Common/Skeleton";
+import PageHeader from "@/components/Editorial/PageHeader";
 
 export default function TimelinePage() {
   const settings = useStore((s) => s.settings);
@@ -35,6 +36,10 @@ export default function TimelinePage() {
 
   const activeScenarios = scenarios.filter((s) => activeScenarioIds.includes(s.id));
 
+  const now = new Date();
+  const year = now.getFullYear();
+  const monthName = now.toLocaleDateString("en-US", { month: "long" }).toUpperCase();
+
   return (
     <>
       <div className="space-y-4 pb-12 md:pr-60">
@@ -44,9 +49,12 @@ export default function TimelinePage() {
         >
           <ChevronLeft size={14} /> Home
         </Link>
-        <h1 className="text-3xl md:text-4xl font-display font-bold tracking-tight">
-          Timeline
-        </h1>
+
+        <PageHeader
+          eyebrow={`EDITION · ${monthName} ${year} · VOL ${year}`}
+          title="Timeline"
+          byline="The full projection — past, present, and future scenarios overlaid"
+        />
 
         <Suspense fallback={<Skeleton height={520} />}>
           <TimeMachine
@@ -66,17 +74,30 @@ export default function TimelinePage() {
 
         {activeScenarios.length > 0 && (
           <div className="glass p-4">
-            <div className="text-[10px] uppercase tracking-widest text-[var(--ink-muted)] mb-2">
+            <div className="text-[9px] uppercase tracking-[0.22em] text-[var(--ink-muted)] mb-3">
               Active scenarios
             </div>
-            <div className="flex flex-wrap gap-1.5">
-              {activeScenarios.map((s) => (
+            <div className="space-y-0">
+              {activeScenarios.map((s, idx) => (
                 <div
                   key={s.id}
-                  className="px-2.5 py-1 rounded-full text-xs font-semibold"
-                  style={{ background: s.color, color: "var(--bg)" }}
+                  className="flex items-center gap-3 py-2.5 border-b border-[var(--hairline)] last:border-b-0"
                 >
-                  {s.name}
+                  {/* Accent swatch */}
+                  <div
+                    className="w-0.5 h-5 rounded-full shrink-0"
+                    style={{ background: s.color }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="font-display italic text-sm">{s.name}</div>
+                    <div className="text-[10px] uppercase tracking-[0.15em] text-[var(--ink-muted)] mt-0.5">
+                      from {s.startDate.slice(0, 7)}
+                    </div>
+                  </div>
+                  <div
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ background: s.color, opacity: 0.8 }}
+                  />
                 </div>
               ))}
             </div>

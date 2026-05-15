@@ -63,15 +63,22 @@ export default function AICommentary({ monthKey }: Props) {
 
   return (
     <div className="glass p-4 space-y-3">
-      <div className="text-sm font-medium flex items-center gap-2">
-        <Sparkles size={14} className="text-[var(--accent)]" />
-        AI Commentary
+      <div className="text-[9px] uppercase tracking-[0.22em] text-[var(--ink-muted)] flex items-center gap-2">
+        <Sparkles size={11} className="text-[var(--accent)]" />
+        Editor&rsquo;s note
       </div>
 
       {text ? (
-        <div className="text-sm text-[var(--ink)] leading-relaxed whitespace-pre-wrap">{text}</div>
+        <blockquote
+          className="font-display italic text-sm text-[var(--ink)] leading-relaxed whitespace-pre-wrap pl-4"
+          style={{ borderLeft: "2px solid var(--accent)" }}
+        >
+          {text}
+        </blockquote>
       ) : (
-        <div className="text-sm text-[var(--ink-muted)]">No summary yet for {monthKey}.</div>
+        <div className="font-display italic text-sm text-[var(--ink-muted)]">
+          No summary yet for {monthKey}.
+        </div>
       )}
 
       {error && (

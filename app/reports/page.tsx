@@ -23,6 +23,7 @@ import { motion } from "framer-motion";
 import Sankey, { type SankeyNode, type SankeyLink } from "@/components/Reports/Sankey";
 import AICommentary from "@/components/Reports/AICommentary";
 import { getThemeColor } from "@/lib/theme-tokens";
+import PageHeader from "@/components/Editorial/PageHeader";
 
 type Range = "thisMonth" | "lastMonth" | "ytd" | "last12" | "custom";
 
@@ -235,11 +236,16 @@ export default function ReportsPage() {
     return { sankeyNodes: nodes, sankeyLinks: links };
   }, [transactions, categories, now]);
 
+  const reportMonthName = new Intl.DateTimeFormat("en-US", { month: "long" }).format(now);
+  const reportYear = now.getFullYear();
+
   return (
     <div className="space-y-6 pb-12">
-      <header className="pt-2 md:pt-6">
-        <h1 className="text-3xl font-display font-bold tracking-tight">Reports</h1>
-      </header>
+      <PageHeader
+        eyebrow={`REPORT · ${reportMonthName.toUpperCase()} ${reportYear}`}
+        title="By the numbers"
+        byline="Income, outflows, and where the money rests"
+      />
 
       <div className="glass p-4 grid grid-cols-2 md:grid-cols-5 gap-3">
         <Field label="Range">
@@ -295,7 +301,12 @@ export default function ReportsPage() {
         <Stat label="Net" value={net} currency={settings.currency} color={net >= 0 ? (chartColors.positive || "#22c55e") : (chartColors.negative || "#ef4444")} />
       </div>
 
-      <Sankey nodes={sankeyNodes} links={sankeyLinks} />
+      <div className="space-y-1">
+        <p className="font-display italic text-[11px] text-[var(--ink-muted)] px-1">
+          <em>money flow — every dollar from income to category to net</em>
+        </p>
+        <Sankey nodes={sankeyNodes} links={sankeyLinks} />
+      </div>
       <AICommentary monthKey={currentMonthKey} />
 
       <motion.div

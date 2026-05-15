@@ -219,23 +219,35 @@ export default function TimeMachine(props: TimeMachineProps) {
   return (
     <div className="glass p-4 md:p-5 relative overflow-hidden">
       {/* Header row */}
-      <div className="flex items-start justify-between gap-3 mb-2">
-        <div>
-          <div className="text-[10px] uppercase tracking-widest text-[var(--ink-muted)]">
-            Net worth · {periodLabel}
-          </div>
-          <div className="text-3xl md:text-4xl font-bold tracking-tight font-display" style={{ marginTop: 2 }}>
-            <MoneyNumber value={displayValue} currency={currency} displayFont />
-          </div>
-          {expanded && (
-            <div className="text-xs text-[var(--ink-muted)] mt-1">
-              drag to scrub · drop a what-if on the future
-            </div>
-          )}
-        </div>
+      <div className="mb-2">
+        {/* Period toggle inline row above the value */}
         {onHorizonChange && (
-          <PeriodToggle value={horizon} onChange={onHorizonChange} />
+          <div className="flex items-center gap-2 mb-2">
+            <span className="font-display italic text-[11px] text-[var(--ink-muted)]">view:</span>
+            <PeriodToggle value={horizon} onChange={onHorizonChange} />
+          </div>
         )}
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.22em] text-[var(--ink-muted)]">
+              Net worth · {periodLabel}
+            </div>
+            <div
+              className="text-4xl md:text-6xl font-bold tracking-tight font-display font-numerals"
+              style={{ marginTop: 2, letterSpacing: "-0.03em" }}
+            >
+              <MoneyNumber value={displayValue} currency={currency} displayFont />
+            </div>
+            <div className="font-display italic text-[11px] text-[var(--ink-muted)] mt-1">
+              as projected through {periodLabel}
+            </div>
+            {expanded && (
+              <div className="text-xs text-[var(--ink-muted)] mt-1 opacity-60">
+                drag to scrub · drop a what-if on the future
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Plot container */}

@@ -1,9 +1,9 @@
 "use client";
 import { useMemo } from "react";
-import { motion } from "framer-motion";
 import { useStore } from "@/lib/store";
 import { project } from "@/lib/projection";
 import { formatMoney, timeGreeting } from "@/lib/utils";
+import PageHeader from "@/components/Editorial/PageHeader";
 
 export default function CopilotGreeting() {
   const settings = useStore((s) => s.settings);
@@ -52,31 +52,20 @@ export default function CopilotGreeting() {
     const d = new Date(fiveYearDate);
     const yy = d.getUTCFullYear();
     const mo = d.toLocaleDateString("en-US", { month: "short", timeZone: "UTC" });
-    return `${mo} ${yy}`;
+    return `${mo} '${String(yy).slice(-2)}`;
   })();
 
-  return (
-    <header className="pt-2 md:pt-6">
-      <motion.div
-        initial={{ opacity: 0, y: -6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35 }}
-        className="text-xs uppercase tracking-widest text-[var(--ink-muted)]"
-      >
-        Good {greeting.text.replace(/^Good /i, "").toLowerCase()}{settings.userName ? `, ${settings.userName}` : ""}
-      </motion.div>
-      <motion.h1
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.05 }}
-        className="text-2xl md:text-4xl font-display font-bold tracking-tight mt-1 leading-tight"
-        style={{ letterSpacing: "-0.02em", maxWidth: "32ch" }}
-      >
-        You&apos;re <span style={{ color: "var(--positive)" }}>{monthPhrase}</span>{" "}
-        — on track to hit{" "}
-        <span style={{ color: "var(--accent)" }}>{formatMoney(fiveYearValue, settings.currency)}</span>{" "}
-        by {yearLabel}.
-      </motion.h1>
-    </header>
-  );
+  const now = new Date();
+  const weekday = now.toLocaleDateString("en-US", { weekday: "short" }).toUpperCase();
+  const month = now.toLocaleDateString("en-US", { month: "short" }).toUpperCase();
+  const day = now.getDate();
+
+  const eyebrow = `${weekday} · ${month} ${day}`;
+  const greetingWord = greeting.text; // e.g. "Good morning"
+  const name = settings.userName ? `, ${settings.userName}` : "";
+  const title = `${greetingWord}${name}.`;
+
+  const byline = `You're ${monthPhrase} — on track to hit ${formatMoney(fiveYearValue, settings.currency)} by ${yearLabel}.`;
+
+  return <PageHeader eyebrow={eyebrow} title={title} byline={byline} />;
 }
