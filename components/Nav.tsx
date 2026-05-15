@@ -15,6 +15,7 @@ import {
   Sparkles,
   Search,
   Clock,
+  History,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -30,6 +31,7 @@ const items = [
   { href: "/insights", label: "AI Insight", icon: Sparkles },
   { href: "/notes", label: "Notes", icon: NotebookPen },
   { href: "/search", label: "Search", icon: Search },
+  { href: "/activity", label: "Activity log", icon: History },
   { href: "/settings", label: "Settings", icon: SettingsIcon },
 ];
 

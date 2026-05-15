@@ -16,6 +16,7 @@ import MigrationPrompt from "@/components/Migration/MigrationPrompt";
 import SwRegister from "@/components/Sw/SwRegister";
 import CmdK from "@/components/Copilot/CmdK";
 import UndoCard from "@/components/Copilot/UndoCard";
+import ActivitySidebar from "@/components/Copilot/ActivitySidebar";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
@@ -79,6 +80,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <MigrationPrompt />
             <CmdK />
             <UndoCard />
+            <ActivitySidebar />
             <SwRegister />
           </HouseholdProvider>
         </AuthProvider>
