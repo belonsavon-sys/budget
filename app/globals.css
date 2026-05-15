@@ -64,6 +64,12 @@ body {
   color: var(--bg);
 }
 
+/* Canonical accent button — use instead of gradient-fill + text-white */
+.accent-button {
+  background: var(--accent);
+  color: var(--bg);
+}
+
 .pulse-dot {
   animation: pulse-dot 1.8s ease-in-out infinite;
 }

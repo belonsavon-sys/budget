@@ -172,13 +172,11 @@ export default function InsightsPage() {
             className="glass p-5 flex gap-3 items-start"
           >
             <div
-              className={`w-10 h-10 rounded-xl grid place-items-center shrink-0 text-white ${
-                i.tone === "good"
-                  ? "bg-green-500"
-                  : i.tone === "warn"
-                  ? "bg-amber-500"
-                  : "gradient-fill"
-              }`}
+              className="w-10 h-10 rounded-xl grid place-items-center shrink-0"
+              style={{
+                background: i.tone === "good" ? "var(--positive)" : i.tone === "warn" ? "var(--warning)" : "var(--accent)",
+                color: "var(--bg)",
+              }}
             >
               {i.icon}
             </div>

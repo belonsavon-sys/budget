@@ -84,7 +84,7 @@ export default function QuickAddFAB() {
             if (settings.hapticsEnabled) vibrate(15);
             setOpen((o) => !o);
           }}
-          className="w-16 h-16 rounded-full gradient-fill text-white grid place-items-center shadow-2xl tap"
+          className="w-16 h-16 rounded-full gradient-fill grid place-items-center shadow-2xl tap"
           animate={{ rotate: open ? 135 : 0 }}
           transition={{ type: "spring", stiffness: 380, damping: 20 }}
           aria-label="Quick add"

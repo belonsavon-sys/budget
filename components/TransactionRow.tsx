@@ -37,7 +37,7 @@ export default function TransactionRow({ txn }: { txn: Transaction }) {
   const Icon =
     txn.type === "income" ? ArrowDownLeft : txn.type === "transfer" ? ArrowLeftRight : ArrowUpRight;
   const color =
-    txn.type === "income" ? "#22c55e" : txn.type === "transfer" ? "#3b82f6" : "#ef4444";
+    txn.type === "income" ? "var(--positive)" : txn.type === "transfer" ? "var(--accent-2)" : "var(--negative)";
 
   function togglePaid() {
     const next =
@@ -110,7 +110,7 @@ export default function TransactionRow({ txn }: { txn: Transaction }) {
             onClick={togglePaid}
             className={`tap w-8 h-8 rounded-full grid place-items-center ${
               txn.status === "paid" || txn.status === "received"
-                ? "bg-green-500 text-white"
+                ? "bg-[var(--positive)] text-[var(--bg)]"
                 : "bg-[var(--hover)] text-[var(--ink-muted)]"
             }`}
             aria-label="Mark paid"

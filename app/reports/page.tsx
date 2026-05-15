@@ -22,6 +22,7 @@ import { formatMoney, monthName } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Sankey, { type SankeyNode, type SankeyLink } from "@/components/Reports/Sankey";
 import AICommentary from "@/components/Reports/AICommentary";
+import { getThemeColor } from "@/lib/theme-tokens";
 
 type Range = "thisMonth" | "lastMonth" | "ytd" | "last12" | "custom";
 
@@ -30,6 +31,14 @@ export default function ReportsPage() {
   const categories = useStore((s) => s.categories);
   const settings = useStore((s) => s.settings);
   const accounts = useStore((s) => s.accounts);
+  const themeId = useStore((s) => s.settings.themeId);
+
+  // Resolve theme tokens for Recharts props (cannot accept CSS var() directly)
+  const chartColors = useMemo(() => ({
+    positive: getThemeColor("positive"),
+    negative: getThemeColor("negative"),
+    accent: getThemeColor("accent"),
+  }), [themeId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [range, setRange] = useState<Range>("last12");
   const [customStart, setCustomStart] = useState("");
@@ -196,12 +205,12 @@ export default function ReportsPage() {
     // Column 0: income sources
     for (const [cid, val] of incomeByCategory) {
       const cat = categories.find((c) => c.id === cid);
-      nodes.push({ id: `inc-${cid}`, label: cat?.name ?? "Income", value: val, column: 0, color: cat?.color ?? "#22c55e" });
+      nodes.push({ id: `inc-${cid}`, label: cat?.name ?? "Income", value: val, column: 0, color: cat?.color ?? (getThemeColor("positive") || "#22c55e") });
       links.push({ source: `inc-${cid}`, target: "hub", value: val });
     }
 
     // Column 1: hub
-    nodes.push({ id: "hub", label: "This month", value: totalInc, column: 1, color: "#6366f1" });
+    nodes.push({ id: "hub", label: "This month", value: totalInc, column: 1, color: getThemeColor("accent") || "#6366f1" });
 
     // Column 2: expense categories
     const topExp = Array.from(expenseByCategory.entries()).sort((a, b) => b[1] - a[1]).slice(0, 8);
@@ -209,7 +218,7 @@ export default function ReportsPage() {
     for (const [cid, val] of topExp) {
       otherAmt -= val;
       const cat = categories.find((c) => c.id === cid);
-      nodes.push({ id: `exp-${cid}`, label: cat?.name ?? "Expense", value: val, column: 2, color: cat?.color ?? "#ef4444" });
+      nodes.push({ id: `exp-${cid}`, label: cat?.name ?? "Expense", value: val, column: 2, color: cat?.color ?? (getThemeColor("negative") || "#ef4444") });
       links.push({ source: "hub", target: `exp-${cid}`, value: val });
     }
 
@@ -281,9 +290,9 @@ export default function ReportsPage() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <Stat label="Income" value={totalIncome} currency={settings.currency} color="#22c55e" />
-        <Stat label="Expense" value={totalExpense} currency={settings.currency} color="#ef4444" />
-        <Stat label="Net" value={net} currency={settings.currency} color={net >= 0 ? "#22c55e" : "#ef4444"} />
+        <Stat label="Income" value={totalIncome} currency={settings.currency} color={chartColors.positive || "#22c55e"} />
+        <Stat label="Expense" value={totalExpense} currency={settings.currency} color={chartColors.negative || "#ef4444"} />
+        <Stat label="Net" value={net} currency={settings.currency} color={net >= 0 ? (chartColors.positive || "#22c55e") : (chartColors.negative || "#ef4444")} />
       </div>
 
       <Sankey nodes={sankeyNodes} links={sankeyLinks} />
@@ -306,8 +315,8 @@ export default function ReportsPage() {
               formatter={(v) => formatMoney(Number(v), settings.currency)}
             />
             <Legend />
-            <Line type="monotone" dataKey="income" stroke="#22c55e" strokeWidth={2} dot={false} />
-            <Line type="monotone" dataKey="expense" stroke="#ef4444" strokeWidth={2} dot={false} />
+            <Line type="monotone" dataKey="income" stroke={chartColors.positive || "#22c55e"} strokeWidth={2} dot={false} />
+            <Line type="monotone" dataKey="expense" stroke={chartColors.negative || "#ef4444"} strokeWidth={2} dot={false} />
             <Line type="monotone" dataKey="net" stroke="var(--grad-via)" strokeWidth={2.5} dot={false} />
           </LineChart>
         </ResponsiveContainer>
@@ -364,8 +373,8 @@ export default function ReportsPage() {
                 formatter={(v) => formatMoney(Number(v), settings.currency)}
               />
               <Legend />
-              <Bar dataKey="income" fill="#22c55e" radius={[8, 8, 0, 0]} />
-              <Bar dataKey="expense" fill="#ef4444" radius={[8, 8, 0, 0]} />
+              <Bar dataKey="income" fill={chartColors.positive || "#22c55e"} radius={[8, 8, 0, 0]} />
+              <Bar dataKey="expense" fill={chartColors.negative || "#ef4444"} radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
           </div>

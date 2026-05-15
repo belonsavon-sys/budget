@@ -68,7 +68,7 @@ export function Button({
   size?: "sm" | "md" | "lg";
 }) {
   const variants = {
-    primary: "gradient-fill text-white shadow-lg",
+    primary: "gradient-fill shadow-lg",
     secondary: "bg-[var(--hover)] text-[var(--fg)]",
     ghost: "hover:bg-[var(--hover)]",
     danger: "bg-[color-mix(in_srgb,var(--negative)_15%,transparent)] text-[var(--negative)] hover:bg-red-500/25",

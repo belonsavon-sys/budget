@@ -101,7 +101,7 @@ export default function AccountsPage() {
               </div>
               <div className="relative mt-4 flex items-end justify-between gap-3">
                 <div>
-                  <div className="text-3xl font-bold tabular-nums" style={{ color: bal < 0 ? "#ef4444" : undefined }}>
+                  <div className="text-3xl font-bold tabular-nums" style={{ color: bal < 0 ? "var(--negative)" : undefined }}>
                     {formatMoney(bal, a.currency)}
                   </div>
                   {settings.showProjected && projectedBal !== bal && (

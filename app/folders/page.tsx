@@ -70,7 +70,7 @@ export default function FoldersPage() {
                     href={`/folders/${y.year}/${String(m.month).padStart(2, "0")}`}
                     className="glass p-4 flex items-center gap-3 tap"
                   >
-                    <div className="w-10 h-10 rounded-xl gradient-fill grid place-items-center text-white">
+                    <div className="w-10 h-10 rounded-xl gradient-fill grid place-items-center" style={{ color: "var(--bg)" }}>
                       <Folder size={18} />
                     </div>
                     <div className="flex-1">
@@ -80,7 +80,7 @@ export default function FoldersPage() {
                     <div className="text-right">
                       <div
                         className="text-sm font-semibold tabular-nums"
-                        style={{ color: net >= 0 ? "#22c55e" : "#ef4444" }}
+                        style={{ color: net >= 0 ? "var(--positive)" : "var(--negative)" }}
                       >
                         {net >= 0 ? "+" : "−"}
                         {formatMoney(Math.abs(net), settings.currency)}

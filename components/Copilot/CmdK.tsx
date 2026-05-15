@@ -135,7 +135,7 @@ export default function CmdK() {
       {/* Floating trigger button */}
       <button
         onClick={() => setOpen(true)}
-        className="tap fixed bottom-24 md:bottom-8 left-4 md:left-auto md:right-4 z-40 w-12 h-12 rounded-full gradient-fill flex items-center justify-center shadow-lg text-white"
+        className="tap fixed bottom-24 md:bottom-8 left-4 md:left-auto md:right-4 z-40 w-12 h-12 rounded-full gradient-fill flex items-center justify-center shadow-lg"
         aria-label="Open Copilot (Cmd+K)"
       >
         <Sparkles size={20} />

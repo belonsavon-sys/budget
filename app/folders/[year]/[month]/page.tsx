@@ -75,7 +75,7 @@ export default function FolderPage({
         </div>
         <div className="glass p-4">
           <div className="text-xs text-[var(--ink-muted)]">Net</div>
-          <div className="text-2xl font-bold tabular-nums" style={{ color: income - expense >= 0 ? "#22c55e" : "#ef4444" }}>
+          <div className="text-2xl font-bold tabular-nums" style={{ color: income - expense >= 0 ? "var(--positive)" : "var(--negative)" }}>
             {formatMoney(income - expense, settings.currency)}
           </div>
         </div>
