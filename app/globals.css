@@ -1,178 +1,102 @@
 @import "tailwindcss";
 
-:root {
-  --bg: #f8fafc;
-  --fg: #0f172a;
-  --card: rgba(255, 255, 255, 0.65);
-  --card-border: rgba(255, 255, 255, 0.6);
-  --muted: rgba(15, 23, 42, 0.55);
-  --hover: rgba(15, 23, 42, 0.06);
-  --shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
-  --grad-from: #a78bfa;
-  --grad-via: #f472b6;
-  --grad-to: #fb923c;
-}
+/* Import all theme token sets — only one activates via data-theme on <html> */
+@import "./themes/architectural.css";
+@import "./themes/newsroom.css";
+@import "./themes/ledger.css";
+@import "./themes/terminal.css";
+@import "./themes/deep-space.css";
 
-html.dark {
-  --bg: #06070b;
-  --fg: #f1f5f9;
-  --card: rgba(20, 24, 33, 0.6);
-  --card-border: rgba(255, 255, 255, 0.08);
-  --muted: rgba(241, 245, 249, 0.55);
-  --hover: rgba(255, 255, 255, 0.06);
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
-}
-
+/* Tailwind v4 theme bridge — map our tokens to Tailwind's color/font names */
 @theme inline {
   --color-background: var(--bg);
-  --color-foreground: var(--fg);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-foreground: var(--ink);
+  --color-muted: var(--ink-muted);
+  --color-accent: var(--accent);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
+  --radius-card: var(--radius-card);
 }
 
 html,
 body {
   background: var(--bg);
-  color: var(--fg);
+  color: var(--ink);
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: contain;
+  font-family: var(--font-body);
+  transition: background var(--motion-medium) ease, color var(--motion-medium) ease;
 }
 
-body {
-  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+/* Display + numerals utility */
+.font-display {
+  font-family: var(--font-display);
+}
+.font-numerals {
+  font-family: var(--font-display);
+  font-feature-settings: "tnum", "lnum";
 }
 
-/* Animated aurora gradient mesh — uses the user's gradient picker */
-.aurora {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-}
-.aurora::before,
-.aurora::after,
-.aurora .blob {
-  content: "";
-  position: absolute;
-  width: 60vmax;
-  height: 60vmax;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.55;
-  animation: drift 22s ease-in-out infinite;
-}
-.aurora::before {
-  background: var(--grad-from);
-  top: -25vmax;
-  left: -15vmax;
-  animation-delay: 0s;
-}
-.aurora::after {
-  background: var(--grad-to);
-  bottom: -25vmax;
-  right: -15vmax;
-  animation-delay: -8s;
-}
-.aurora .blob {
-  background: var(--grad-via);
-  top: 30%;
-  left: 40%;
-  animation-delay: -14s;
-}
-html.dark .aurora::before,
-html.dark .aurora::after,
-html.dark .aurora .blob {
-  opacity: 0.35;
-}
-
-@keyframes drift {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(8vmax, -4vmax) scale(1.1);
-  }
-  66% {
-    transform: translate(-6vmax, 6vmax) scale(0.95);
-  }
-}
-
-/* Glassmorphism cards */
+/* Glass card — token-driven, theme-aware */
 .glass {
-  background: var(--card);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px);
-  border: 1px solid var(--card-border);
-  box-shadow: var(--shadow);
-  border-radius: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-card);
+  -webkit-backdrop-filter: saturate(180%) blur(var(--blur-glass));
+  backdrop-filter: saturate(180%) blur(var(--blur-glass));
 }
 
+/* Accent text — replaces gradient-text. Single brand accent. */
+.accent-text {
+  color: var(--accent);
+}
+.accent-fill {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Backwards-compat: existing components still use .gradient-text / .gradient-fill.
+   Map them to the new single-accent so nothing breaks during Wave 2 migration. */
 .gradient-text {
-  background: linear-gradient(120deg, var(--grad-from), var(--grad-via), var(--grad-to));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  color: var(--accent);
+  background: none;
+  -webkit-text-fill-color: currentColor;
 }
-
 .gradient-fill {
-  background: linear-gradient(120deg, var(--grad-from), var(--grad-via), var(--grad-to));
+  background: var(--accent);
+  color: var(--bg);
 }
 
 .pulse-dot {
   animation: pulse-dot 1.8s ease-in-out infinite;
 }
 @keyframes pulse-dot {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.4);
-    opacity: 0.5;
-  }
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.5; }
 }
 
-.shimmer {
-  position: relative;
-  overflow: hidden;
-}
+.shimmer { position: relative; overflow: hidden; }
 .shimmer::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.15),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
   transform: translateX(-100%);
   animation: shimmer 1.6s ease-in-out infinite;
 }
-@keyframes shimmer {
-  to {
-    transform: translateX(100%);
-  }
-}
+@keyframes shimmer { to { transform: translateX(100%); } }
 
-/* Hide scrollbar visually but keep scrollable */
-.scrollbar-hide {
-  scrollbar-width: none;
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
+.scrollbar-hide { scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
 
-input,
-textarea,
-select,
-button {
+input, textarea, select, button {
   font: inherit;
   color: inherit;
 }
-
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -185,13 +109,73 @@ input[type="number"] {
 .tap {
   transition: transform 120ms ease, background 120ms ease;
 }
-.tap:active {
-  transform: scale(0.96);
+.tap:active { transform: scale(0.96); }
+
+.safe-bottom { padding-bottom: calc(env(safe-area-inset-bottom, 0) + 0.5rem); }
+.safe-top { padding-top: env(safe-area-inset-top, 0); }
+
+/* View-transition cross-fade for theme swaps (Chrome/Edge/Safari). */
+@supports (view-transition-name: root) {
+  ::view-transition-old(root), ::view-transition-new(root) {
+    animation-duration: 200ms;
+    animation-timing-function: ease;
+  }
 }
 
-.safe-bottom {
-  padding-bottom: calc(env(safe-area-inset-bottom, 0) + 0.5rem);
+/* Terminal-theme ambient: subtle topographic contour lines layered on body bg. */
+:root[data-theme="terminal"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--ambient-svg-opacity);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600' preserveAspectRatio='none'><g stroke='%2334d399' stroke-width='0.5' fill='none' opacity='0.6'><path d='M0,80 Q200,40 400,70 T800,30'/><path d='M0,160 Q200,110 400,150 T800,110'/><path d='M0,260 Q200,200 400,250 T800,210'/><path d='M0,360 Q200,300 400,360 T800,320'/><path d='M0,460 Q200,420 400,450 T800,430'/></g></svg>");
+  background-size: cover;
 }
-.safe-top {
-  padding-top: env(safe-area-inset-top, 0);
+
+/* Deep-space ambient: scattered stars + diagonal Milky Way dust. */
+:root[data-theme="deep-space"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--ambient-svg-opacity);
+  background-image:
+    radial-gradient(1px 1px at 22% 18%, rgba(244,237,224,0.5), transparent 60%),
+    radial-gradient(1px 1px at 48% 40%, rgba(244,237,224,0.85), transparent 60%),
+    radial-gradient(0.7px 0.7px at 78% 22%, rgba(244,237,224,0.45), transparent 60%),
+    radial-gradient(0.9px 0.9px at 15% 55%, rgba(244,237,224,0.6), transparent 60%),
+    radial-gradient(1.1px 1.1px at 62% 65%, rgba(244,237,224,0.9), transparent 60%),
+    radial-gradient(0.6px 0.6px at 85% 50%, rgba(244,237,224,0.4), transparent 60%),
+    radial-gradient(0.8px 0.8px at 35% 75%, rgba(244,237,224,0.55), transparent 60%),
+    radial-gradient(0.5px 0.5px at 92% 85%, rgba(244,237,224,0.35), transparent 60%),
+    radial-gradient(0.7px 0.7px at 50% 90%, rgba(244,237,224,0.5), transparent 60%),
+    linear-gradient(115deg, transparent 35%, rgba(82,54,160,0.18) 50%, transparent 65%);
+  background-size: cover;
+}
+
+/* Ledger-theme parchment grain via SVG turbulence. */
+:root[data-theme="ledger"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n'><feTurbulence baseFrequency='0.7' numOctaves='3'/><feColorMatrix values='0 0 0 0 0.35  0 0 0 0 0.2  0 0 0 0 0.05  0 0 0 0.07 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* Architectural-theme subtle warm grain. */
+:root[data-theme="architectural"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.4  0 0 0 0 0.3  0 0 0 0 0.2  0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
