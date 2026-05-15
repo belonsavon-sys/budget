@@ -19,6 +19,7 @@ import UndoCard from "@/components/Copilot/UndoCard";
 import ActivitySidebar from "@/components/Copilot/ActivitySidebar";
 import InstallPrompt from "@/components/PWA/InstallPrompt";
 import WakeWord from "@/components/Copilot/WakeWord";
+import { Analytics } from '@vercel/analytics/next';
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
@@ -96,6 +97,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <WakeWord />
           </HouseholdProvider>
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );
