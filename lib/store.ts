@@ -14,6 +14,7 @@ import type {
   Note,
   Reminder,
   Settings,
+  WhatIfScenario,
 } from "./types";
 import { uid } from "./utils";
 import { materializeRecurring } from "./recurring";
@@ -107,6 +108,12 @@ export interface StoreActions {
   addReminder: (r: Omit<Reminder, "id">) => void;
   updateReminder: (id: string, r: Partial<Reminder>) => void;
   removeReminder: (id: string) => void;
+
+  addScenario: (s: Omit<WhatIfScenario, "id" | "createdAt" | "updatedAt" | "householdId">) => WhatIfScenario;
+  updateScenario: (id: string, patch: Partial<WhatIfScenario>) => void;
+  removeScenario: (id: string) => void;
+  toggleActiveScenario: (id: string) => void;
+  setActiveScenarios: (ids: string[]) => void;
 
   updateSettings: (s: Partial<Settings>) => void;
 
@@ -345,6 +352,48 @@ export const useStore = create<Store>()(
         set((s) => ({ reminders: s.reminders.filter((x) => x.id !== id) }));
         syncAfter("reminders", null, "delete", id);
       },
+
+      addScenario: (s) => {
+        const now = new Date().toISOString();
+        const hid = get().currentHouseholdId ?? "";
+        const scenario: WhatIfScenario = {
+          ...s,
+          id: uid("s"),
+          householdId: hid,
+          createdAt: now,
+          updatedAt: now,
+        };
+        set((state) => ({ scenarios: [...state.scenarios, scenario] }));
+        syncAfter("what_if_scenarios", scenario, "upsert");
+        return scenario;
+      },
+      updateScenario: (id, patch) => {
+        const now = new Date().toISOString();
+        set((state) => ({
+          scenarios: state.scenarios.map((x) =>
+            x.id === id ? { ...x, ...patch, updatedAt: now } : x
+          ),
+        }));
+        const after = get().scenarios.find((x) => x.id === id);
+        if (after) syncAfter("what_if_scenarios", after, "upsert");
+      },
+      removeScenario: (id) => {
+        set((state) => ({
+          scenarios: state.scenarios.filter((x) => x.id !== id),
+          activeScenarioIds: state.activeScenarioIds.filter((x) => x !== id),
+        }));
+        syncAfter("what_if_scenarios", null, "delete", id);
+      },
+      // Local UI state only — which scenarios overlay the projection right now.
+      // Not synced to Supabase: each device controls its own active set.
+      toggleActiveScenario: (id) => {
+        set((state) => ({
+          activeScenarioIds: state.activeScenarioIds.includes(id)
+            ? state.activeScenarioIds.filter((x) => x !== id)
+            : [...state.activeScenarioIds, id],
+        }));
+      },
+      setActiveScenarios: (ids) => set({ activeScenarioIds: ids }),
 
       updateSettings: (s) =>
         set((state) => ({ settings: { ...state.settings, ...s } })),

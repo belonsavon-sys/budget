@@ -1,7 +1,7 @@
 import type { Database } from "../db.types";
 import type {
   Account, Category, Tag, Transaction, RecurringRule,
-  SavingsGoal, Budget, Note, Reminder,
+  SavingsGoal, Budget, Note, Reminder, WhatIfScenario, ScenarioDelta,
 } from "../types";
 
 type DB = Database["public"]["Tables"];
@@ -63,6 +63,13 @@ export const rowToApp = {
     recurring: (r.recurring ?? undefined) as Reminder["recurring"],
     done: r.done, linkedTransactionId: r.linked_transaction_id ?? undefined,
   }),
+  what_if_scenarios: (r: DB["what_if_scenarios"]["Row"]): WhatIfScenario => ({
+    id: r.id, householdId: r.household_id, name: r.name,
+    startDate: r.start_date, endDate: r.end_date ?? undefined,
+    pinned: r.pinned, color: r.color, icon: r.icon,
+    deltas: (r.deltas as unknown as ScenarioDelta[]) ?? [],
+    createdAt: r.created_at, updatedAt: r.updated_at,
+  }),
 };
 
 import type { Json } from "../db.types";
@@ -113,6 +120,12 @@ export const appToRow = {
     recurring: rm.recurring ?? null, done: rm.done,
     linked_transaction_id: rm.linkedTransactionId ?? null,
   }),
+  what_if_scenarios: (s: WhatIfScenario, householdId: string): DB["what_if_scenarios"]["Insert"] => ({
+    id: s.id, household_id: householdId, name: s.name,
+    start_date: s.startDate, end_date: s.endDate ?? null,
+    pinned: s.pinned, color: s.color, icon: s.icon,
+    deltas: s.deltas as unknown as Json,
+  }),
 };
 
 /** Slice key in the Zustand store, indexed by DB table name. */
@@ -126,4 +139,5 @@ export const tableToSlice: Record<keyof typeof rowToApp, string> = {
   budgets: "budgets",
   notes: "notes",
   reminders: "reminders",
+  what_if_scenarios: "scenarios",
 };
