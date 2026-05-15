@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useStore } from "@/lib/store";
 import { getStoredGroqKey, setStoredGroqKey, clearStoredGroqKey } from "@/lib/agent/client";
 import { Field, Input, Button } from "@/components/Field";
-import { Brain, Key, CheckCircle2, XCircle, Trash2, Plus, ShieldOff, Shield } from "lucide-react";
+import { Brain, Key, CheckCircle2, XCircle, Trash2, Plus, ShieldOff, Shield, Mic, Volume2 } from "lucide-react";
 import Link from "next/link";
 import type { AgentMemory } from "@/lib/types";
 
@@ -202,6 +202,56 @@ export default function SettingsAiPage() {
           >
             <span
               className={`absolute top-0.5 ${settings.agentKillSwitch ? "left-6" : "left-0.5"} w-6 h-6 bg-white rounded-full shadow transition-all`}
+            />
+          </button>
+        </label>
+      </section>
+
+      {/* Section 4: Voice */}
+      <section className="glass p-5 space-y-4">
+        <div className="flex items-center gap-2 text-sm font-semibold">
+          <Mic size={14} /> Voice
+        </div>
+        <div className="text-xs text-[var(--ink-muted)]">
+          All voice processing happens in the browser via the Web Speech API. No audio leaves your device.
+        </div>
+
+        <label className="flex items-center justify-between cursor-pointer">
+          <div>
+            <div className="text-sm font-medium flex items-center gap-1.5">
+              <Volume2 size={13} /> Read responses aloud
+            </div>
+            <div className="text-xs text-[var(--ink-muted)] mt-0.5">
+              Copilot speaks its replies using your system voice
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => updateSettings({ voiceReadAloud: !settings.voiceReadAloud })}
+            className={`tap relative w-12 h-7 rounded-full transition-colors shrink-0 ml-4`}
+            style={{ background: settings.voiceReadAloud ? "var(--accent)" : "var(--surface-2)" }}
+          >
+            <span
+              className={`absolute top-0.5 ${settings.voiceReadAloud ? "left-6" : "left-0.5"} w-6 h-6 bg-white rounded-full shadow transition-all`}
+            />
+          </button>
+        </label>
+
+        <label className="flex items-center justify-between cursor-pointer">
+          <div>
+            <div className="text-sm font-medium">&quot;Hey budget&quot; wake word</div>
+            <div className="text-xs text-[var(--ink-muted)] mt-0.5">
+              Continuous listener that opens ⌘K when triggered. Uses the mic constantly while enabled.
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => updateSettings({ voiceWakeWordEnabled: !settings.voiceWakeWordEnabled })}
+            className={`tap relative w-12 h-7 rounded-full transition-colors shrink-0 ml-4`}
+            style={{ background: settings.voiceWakeWordEnabled ? "var(--accent)" : "var(--surface-2)" }}
+          >
+            <span
+              className={`absolute top-0.5 ${settings.voiceWakeWordEnabled ? "left-6" : "left-0.5"} w-6 h-6 bg-white rounded-full shadow transition-all`}
             />
           </button>
         </label>

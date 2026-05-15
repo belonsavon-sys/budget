@@ -4,8 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { runAgent, getStoredGroqKey } from "@/lib/agent/client";
 import { undoAction } from "@/lib/agent/dispatch";
-import { Sparkles, Loader2, Undo2, Settings, X, Send } from "lucide-react";
+import { Sparkles, Loader2, Undo2, Settings, X, Send, Mic, MicOff } from "lucide-react";
 import Link from "next/link";
+import { useStore } from "@/lib/store";
+import { startRecognition, isSpeechRecognitionAvailable, type RecognitionHandle } from "@/lib/voice/recognition";
+import { speak, cancelSpeech } from "@/lib/voice/synthesis";
 
 interface ActionEntry {
   tool: string;
@@ -20,7 +23,12 @@ export default function CmdK() {
   const [response, setResponse] = useState<string | null>(null);
   const [actions, setActions] = useState<ActionEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [listening, setListening] = useState(false);
+  const [interim, setInterim] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const recHandle = useRef<RecognitionHandle | null>(null);
+  const voiceReadAloud = useStore((s) => s.settings.voiceReadAloud);
+  const voiceAvailable = typeof window !== "undefined" && isSpeechRecognitionAvailable();
   const hasKey = typeof window !== "undefined" ? Boolean(getStoredGroqKey()) : false;
 
   // Keybinding: Cmd+K (Mac) / Ctrl+K (Win/Linux)
@@ -40,6 +48,13 @@ export default function CmdK() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
+  // External open trigger (wake word dispatches this event)
+  useEffect(() => {
+    const handler = () => setOpen(true);
+    window.addEventListener("budget:open-cmdk", handler);
+    return () => window.removeEventListener("budget:open-cmdk", handler);
+  }, []);
+
   // Autofocus when opened
   useEffect(() => {
     if (open) {
@@ -48,8 +63,55 @@ export default function CmdK() {
       setActions([]);
       setError(null);
       setInput("");
+      setInterim("");
+    } else {
+      // Stop any in-flight recognition when modal closes
+      recHandle.current?.stop();
+      recHandle.current = null;
+      setListening(false);
+      cancelSpeech();
     }
   }, [open]);
+
+  // Read responses aloud when enabled
+  useEffect(() => {
+    if (response && voiceReadAloud) speak(response);
+  }, [response, voiceReadAloud]);
+
+  const toggleVoice = () => {
+    if (listening) {
+      recHandle.current?.stop();
+      recHandle.current = null;
+      setListening(false);
+      return;
+    }
+    if (!voiceAvailable) return;
+    setInterim("");
+    const handle = startRecognition({
+      continuous: false,
+      interim: true,
+      onTranscript: (text, isFinal) => {
+        if (isFinal) {
+          setInput((prev) => (prev ? `${prev} ${text}` : text));
+          setInterim("");
+        } else {
+          setInterim(text);
+        }
+      },
+      onError: (err) => {
+        setError(`Mic error: ${err}`);
+        setListening(false);
+      },
+      onEnd: () => {
+        setListening(false);
+        setInterim("");
+      },
+    });
+    if (handle) {
+      recHandle.current = handle;
+      setListening(true);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!input.trim() || loading) return;
@@ -114,8 +176,11 @@ export default function CmdK() {
                 <div className="flex items-center gap-2 px-4 py-3">
                   <input
                     ref={inputRef}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                    value={interim ? `${input}${input ? " " : ""}${interim}` : input}
+                    onChange={(e) => {
+                      // Disable text editing while listening to avoid cursor fights with the interim transcript
+                      if (!listening) setInput(e.target.value);
+                    }}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && !e.shiftKey) {
                         e.preventDefault();
@@ -126,6 +191,17 @@ export default function CmdK() {
                     disabled={!hasKey || loading}
                     className="flex-1 bg-transparent outline-none text-sm placeholder:text-[var(--ink-muted)]"
                   />
+                  {voiceAvailable && hasKey && (
+                    <button
+                      onClick={toggleVoice}
+                      className="tap"
+                      style={{ color: listening ? "var(--accent)" : "var(--ink-muted)" }}
+                      aria-label={listening ? "Stop listening" : "Start voice input"}
+                      title={listening ? "Stop" : "Voice input"}
+                    >
+                      {listening ? <Mic size={18} className="animate-pulse" /> : <MicOff size={18} />}
+                    </button>
+                  )}
                   {loading ? (
                     <Loader2 size={18} className="animate-spin text-[var(--ink-muted)]" />
                   ) : (

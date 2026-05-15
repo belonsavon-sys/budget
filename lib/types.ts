@@ -163,6 +163,10 @@ export interface Settings {
   showProjected: boolean;
   /** Wave 4: when true, agent dispatcher blocks all auto/confirm-tier tool calls. */
   agentKillSwitch?: boolean;
+  /** Voice: enable "hey budget" wake-word listener (always-on mic in supported browsers). */
+  voiceWakeWordEnabled?: boolean;
+  /** Voice: read agent responses aloud via SpeechSynthesis. */
+  voiceReadAloud?: boolean;
 }
 
 // === Wave 3 · What-If Scenarios ===
