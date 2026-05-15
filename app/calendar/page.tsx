@@ -6,6 +6,12 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { formatMoney, isSameDay } from "@/lib/utils";
 import TransactionRow from "@/components/TransactionRow";
+import Heatmap from "@/components/Calendar/Heatmap";
+import ScenarioInspector from "@/components/Scenarios/ScenarioInspector";
+
+function toIso(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
 
 export default function CalendarPage() {
   const transactions = useStore((s) => s.transactions);
@@ -16,48 +22,38 @@ export default function CalendarPage() {
     return d;
   });
   const [selected, setSelected] = useState<Date | null>(new Date());
+  const [inspectorOpen, setInspectorOpen] = useState(false);
+  const [dropTemplateId, setDropTemplateId] = useState<string | undefined>(undefined);
+  const [dropDate, setDropDate] = useState<string | undefined>(undefined);
 
-  const monthStart = useMemo(() => new Date(cursor.getFullYear(), cursor.getMonth(), 1), [cursor]);
-  const monthEnd = useMemo(
-    () => new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0),
-    [cursor]
-  );
-  const startDay = monthStart.getDay() - (settings.weekStartsMonday ? 1 : 0);
-  const days: Date[] = [];
-  const total = (Math.ceil((startDay + monthEnd.getDate()) / 7)) * 7;
-  for (let i = 0; i < total; i++) {
-    const d = new Date(monthStart);
-    d.setDate(monthStart.getDate() + i - startDay);
-    days.push(d);
-  }
-
-  const byDay = useMemo(() => {
-    const m = new Map<string, { income: number; expense: number; pending: number; projected: number; ids: string[] }>();
+  // Compute daily nets for this month
+  const dailyNets = useMemo(() => {
+    const nets: Record<string, number> = {};
     for (const t of transactions) {
       const d = new Date(t.date);
-      const k = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-      const cur = m.get(k) ?? { income: 0, expense: 0, pending: 0, projected: 0, ids: [] };
-      if (t.type === "income") cur.income += t.amount;
-      if (t.type === "expense") cur.expense += t.amount;
-      if (t.status === "pending") cur.pending++;
-      if (t.status === "projected") cur.projected++;
-      cur.ids.push(t.id);
-      m.set(k, cur);
+      const iso = toIso(d);
+      const prev = nets[iso] ?? 0;
+      if (t.type === "income") nets[iso] = prev + t.amount;
+      else if (t.type === "expense") nets[iso] = prev - t.amount;
     }
-    return m;
+    return nets;
   }, [transactions]);
 
   const selectedTxns = useMemo(
     () =>
       selected
-        ? transactions.filter((t) => isSameDay(new Date(t.date), selected)).sort((a, b) => +new Date(b.date) - +new Date(a.date))
+        ? transactions
+            .filter((t) => isSameDay(new Date(t.date), selected))
+            .sort((a, b) => +new Date(b.date) - +new Date(a.date))
         : [],
     [selected, transactions]
   );
 
-  const weekDays = settings.weekStartsMonday
-    ? ["M", "T", "W", "T", "F", "S", "S"]
-    : ["S", "M", "T", "W", "T", "F", "S"];
+  function handleScenarioDrop(templateId: string, dateIso: string) {
+    setDropTemplateId(templateId);
+    setDropDate(dateIso);
+    setInspectorOpen(true);
+  }
 
   return (
     <div className="space-y-6 pb-12">
@@ -83,48 +79,14 @@ export default function CalendarPage() {
       </header>
 
       <div className="glass p-3">
-        <div className="grid grid-cols-7 gap-1 mb-2 text-center text-xs text-[var(--ink-muted)] font-medium">
-          {weekDays.map((d, i) => (
-            <div key={i}>{d}</div>
-          ))}
-        </div>
-        <div className="grid grid-cols-7 gap-1">
-          {days.map((d, i) => {
-            const inMonth = d.getMonth() === cursor.getMonth();
-            const isToday = isSameDay(d, new Date());
-            const isSelected = selected && isSameDay(d, selected);
-            const k = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-            const info = byDay.get(k);
-            return (
-              <motion.button
-                key={i}
-                whileTap={{ scale: 0.92 }}
-                onClick={() => setSelected(d)}
-                className={`relative aspect-square rounded-xl text-sm font-medium tap ${
-                  isSelected
-                    ? "gradient-fill text-white"
-                    : isToday
-                    ? "bg-[var(--hover)]"
-                    : "hover:bg-[var(--hover)]"
-                } ${inMonth ? "" : "opacity-30"}`}
-              >
-                <div className="absolute top-1 left-1.5 text-xs">{d.getDate()}</div>
-                {info && (
-                  <div className="absolute bottom-1 inset-x-0 flex justify-center gap-0.5">
-                    {info.expense > 0 && <span className="w-1.5 h-1.5 rounded-full bg-red-500" />}
-                    {info.income > 0 && <span className="w-1.5 h-1.5 rounded-full bg-green-500" />}
-                    {info.pending > 0 && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 pulse-dot" />
-                    )}
-                    {info.projected > 0 && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400/60" />
-                    )}
-                  </div>
-                )}
-              </motion.button>
-            );
-          })}
-        </div>
+        <Heatmap
+          monthDate={cursor}
+          dailyNets={dailyNets}
+          weekStartsMonday={settings.weekStartsMonday}
+          selectedDate={selected}
+          onDayClick={(d) => setSelected(d)}
+          onScenarioDrop={handleScenarioDrop}
+        />
       </div>
 
       <AnimatePresence mode="wait">
@@ -140,11 +102,24 @@ export default function CalendarPage() {
               {selected.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })}
             </h2>
             {selectedTxns.length === 0 ? (
-              <div className="glass p-6 text-center text-sm text-[var(--ink-muted)]">Nothing on this day.</div>
+              <div className="glass p-6 text-center text-sm text-[var(--ink-muted)]">
+                Nothing on this day.{" "}
+                {toIso(selected) > toIso(new Date()) && (
+                  <span className="text-[var(--accent)]">Drop a scenario blueprint to plan ahead.</span>
+                )}
+              </div>
             ) : (
               <>
                 <div className="text-xs text-[var(--ink-muted)] px-1">
-                  Total: {formatMoney(selectedTxns.reduce((s, t) => s + (t.type === "income" ? t.amount : t.type === "expense" ? -t.amount : 0), 0), settings.currency)}
+                  Total:{" "}
+                  {formatMoney(
+                    selectedTxns.reduce(
+                      (s, t) =>
+                        s + (t.type === "income" ? t.amount : t.type === "expense" ? -t.amount : 0),
+                      0
+                    ),
+                    settings.currency
+                  )}
                 </div>
                 {selectedTxns.map((t) => (
                   <TransactionRow key={t.id} txn={t} />
@@ -154,6 +129,13 @@ export default function CalendarPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ScenarioInspector
+        open={inspectorOpen}
+        onClose={() => { setInspectorOpen(false); setDropTemplateId(undefined); setDropDate(undefined); }}
+        templateId={dropTemplateId}
+        dropDate={dropDate}
+      />
     </div>
   );
 }
