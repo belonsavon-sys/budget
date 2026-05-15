@@ -12,7 +12,22 @@ export default function ThemeProvider() {
     const html = document.documentElement;
     if (html.getAttribute("data-theme") === target) return;
 
-    const apply = () => html.setAttribute("data-theme", target);
+    const apply = () => {
+      html.setAttribute("data-theme", target);
+      // Update <meta name="theme-color"> to match the active theme's --bg token.
+      requestAnimationFrame(() => {
+        const computedBg = getComputedStyle(html).getPropertyValue("--bg").trim();
+        if (computedBg) {
+          let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+          if (!meta) {
+            meta = document.createElement("meta");
+            meta.name = "theme-color";
+            document.head.appendChild(meta);
+          }
+          meta.setAttribute("content", computedBg);
+        }
+      });
+    };
     const vt = document as unknown as { startViewTransition?: (fn: () => void) => unknown };
     if (typeof vt.startViewTransition === "function") {
       vt.startViewTransition(apply);
@@ -25,20 +40,30 @@ export default function ThemeProvider() {
   // Reads from the same persist key as the zustand store to avoid a flash.
   useEffect(() => {
     if (document.documentElement.getAttribute("data-theme")) return;
+    let id: ThemeId = DEFAULT_THEME;
     try {
       const raw = localStorage.getItem("budget-store-v1");
       if (raw) {
         const parsed = JSON.parse(raw) as { state?: { settings?: { themeId?: unknown } } };
-        const id = parsed?.state?.settings?.themeId;
-        if (isThemeId(id)) {
-          document.documentElement.setAttribute("data-theme", id);
-          return;
-        }
+        const maybeId = parsed?.state?.settings?.themeId;
+        if (isThemeId(maybeId)) id = maybeId;
       }
     } catch {
       // localStorage may be unavailable; fall through to default.
     }
-    document.documentElement.setAttribute("data-theme", DEFAULT_THEME);
+    document.documentElement.setAttribute("data-theme", id);
+    requestAnimationFrame(() => {
+      const computedBg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
+      if (computedBg) {
+        let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+        if (!meta) {
+          meta = document.createElement("meta");
+          meta.name = "theme-color";
+          document.head.appendChild(meta);
+        }
+        meta.setAttribute("content", computedBg);
+      }
+    });
   }, []);
 
   return null;
