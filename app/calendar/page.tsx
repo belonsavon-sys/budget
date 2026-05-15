@@ -59,7 +59,7 @@ export default function CalendarPage() {
   return (
     <div className="space-y-6 pb-12">
       <header className="pt-2 md:pt-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight gradient-text">Calendar</h1>
+        <h1 className="text-3xl font-display font-bold tracking-tight">Calendar</h1>
         <div className="flex items-center gap-2">
           <button
             className="tap p-2 rounded-full hover:bg-[var(--hover)]"

@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { Folder, ChevronRight } from "lucide-react";
+import { Folder, ChevronRight, FolderTree } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { formatMoney, monthName } from "@/lib/utils";
+import EmptyState from "@/components/Common/EmptyState";
 
 export default function FoldersPage() {
   const transactions = useStore((s) => s.transactions);
@@ -38,14 +39,16 @@ export default function FoldersPage() {
   return (
     <div className="space-y-6 pb-12">
       <header className="pt-2 md:pt-6">
-        <h1 className="text-3xl font-bold tracking-tight gradient-text">Folders</h1>
+        <h1 className="text-3xl font-display font-bold tracking-tight">Folders</h1>
         <p className="text-sm text-[var(--ink-muted)] mt-1">Auto-organized by year & month</p>
       </header>
 
       {tree.length === 0 && (
-        <div className="glass p-8 text-center text-[var(--ink-muted)]">
-          No transactions yet.
-        </div>
+        <EmptyState
+          icon={<FolderTree size={24} />}
+          title="No folders yet"
+          description="Folders are auto-created from your transaction dates."
+        />
       )}
 
       {tree.map((y, yi) => (

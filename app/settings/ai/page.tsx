@@ -61,7 +61,7 @@ export default function SettingsAiPage() {
 
       <header className="flex items-center gap-3">
         <Brain size={24} className="text-[var(--accent)]" />
-        <h1 className="text-3xl font-bold tracking-tight gradient-text">AI &amp; Copilot</h1>
+        <h1 className="text-3xl font-display font-bold tracking-tight">AI &amp; Copilot</h1>
       </header>
 
       {/* Section 1: Groq key */}

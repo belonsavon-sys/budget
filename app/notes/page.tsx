@@ -30,7 +30,7 @@ export default function NotesPage() {
   return (
     <div className="space-y-6 pb-12">
       <header className="pt-2 md:pt-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight gradient-text">Notes</h1>
+        <h1 className="text-3xl font-display font-bold tracking-tight">Notes</h1>
         <Button onClick={newNote}>
           <Plus size={16} className="inline mr-1" />New
         </Button>

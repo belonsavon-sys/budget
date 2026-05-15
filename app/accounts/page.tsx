@@ -36,7 +36,7 @@ export default function AccountsPage() {
     <div className="space-y-6 pb-12">
       <header className="pt-2 md:pt-6 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight gradient-text">Accounts</h1>
+          <h1 className="text-3xl font-display font-bold tracking-tight">Accounts</h1>
           <p className="text-sm text-[var(--ink-muted)] mt-1">Net worth: {formatMoney(total, settings.currency)}</p>
         </div>
         <Button onClick={() => { setEditing(null); setOpen(true); }}>

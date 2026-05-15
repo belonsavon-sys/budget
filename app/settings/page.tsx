@@ -29,7 +29,7 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6 pb-12">
       <header className="pt-2 md:pt-6">
-        <h1 className="text-3xl font-bold tracking-tight gradient-text">Settings</h1>
+        <h1 className="text-3xl font-display font-bold tracking-tight">Settings</h1>
       </header>
 
       <section className="glass p-5 space-y-4">

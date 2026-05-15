@@ -93,12 +93,14 @@ export default function Heatmap({
           const net = dailyNets[iso] ?? 0;
           const bgColor = isSelected ? undefined : netToColor(net, maxAbs);
 
+          const netLabel = net !== 0 ? ` · ${net > 0 ? "+" : "−"}$${Math.abs(net).toFixed(2)} net` : "";
           return (
             <button
               key={i}
               onClick={() => onDayClick?.(d)}
               onDrop={(e) => isFuture ? handleDrop(e, iso) : undefined}
               onDragOver={(e) => handleDragOver(e, iso)}
+              aria-label={`${d.toLocaleDateString(undefined, { month: "long", day: "numeric" })}${netLabel}`}
               className={[
                 "relative aspect-square rounded-xl text-xs font-medium tap transition-all",
                 isSelected ? "gradient-fill text-white" : isToday ? "ring-1 ring-[var(--accent)]" : "",

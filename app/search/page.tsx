@@ -29,7 +29,7 @@ export default function SearchPage() {
   return (
     <div className="space-y-4 pb-12">
       <header className="pt-2 md:pt-6">
-        <h1 className="text-3xl md:text-4xl font-display font-bold tracking-tight gradient-text">Search</h1>
+        <h1 className="text-3xl md:text-4xl font-display font-bold tracking-tight">Search</h1>
       </header>
 
       <div className="glass p-3 flex items-center gap-2">

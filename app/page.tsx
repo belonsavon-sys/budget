@@ -14,6 +14,8 @@ import ScenarioTray from "@/components/Scenarios/ScenarioTray";
 import ScenarioInspector from "@/components/Scenarios/ScenarioInspector";
 import TransactionRow from "@/components/TransactionRow";
 import Skeleton from "@/components/Common/Skeleton";
+import EmptyState from "@/components/Common/EmptyState";
+import { Wallet, CalendarClock } from "lucide-react";
 
 export default function Home() {
   const settings = useStore((s) => s.settings);
@@ -94,9 +96,12 @@ export default function Home() {
               </Link>
             </div>
             {recent.length === 0 ? (
-              <div className="glass p-8 text-center text-[var(--ink-muted)]">
-                No transactions yet — tap + to add your first.
-              </div>
+              <EmptyState
+                icon={<Wallet size={24} />}
+                title="No transactions yet"
+                description="Track your income and expenses to get started."
+                action={{ label: "Add your first transaction", onClick: () => window.dispatchEvent(new CustomEvent("budget:open-cmdk")) }}
+              />
             ) : (
               <div className="space-y-2">
                 {recent.map((t) => (
@@ -115,7 +120,11 @@ export default function Home() {
             <div>
               <h2 className="text-lg font-semibold font-display px-1 mb-2">Upcoming</h2>
               {upcoming.length === 0 ? (
-                <div className="glass p-4 text-sm text-[var(--ink-muted)]">Nothing scheduled.</div>
+                <EmptyState
+                  icon={<CalendarClock size={24} />}
+                  title="Nothing scheduled"
+                  description="Upcoming and pending transactions will appear here."
+                />
               ) : (
                 <div className="space-y-2">
                   {upcoming.map((u) => {

@@ -158,7 +158,7 @@ export default function InsightsPage() {
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--hover)] text-xs mb-2">
           <Sparkles size={12} /> AI insight
         </div>
-        <h1 className="text-3xl font-bold tracking-tight gradient-text">Insights</h1>
+        <h1 className="text-3xl font-display font-bold tracking-tight">Insights</h1>
         <p className="text-sm text-[var(--ink-muted)] mt-1">Patterns and nudges from your data</p>
       </header>
 

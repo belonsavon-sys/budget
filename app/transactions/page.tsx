@@ -69,7 +69,7 @@ export default function TransactionsPage() {
   return (
     <div className="space-y-6 pb-12">
       <header className="pt-2 md:pt-6">
-        <h1 className="text-3xl font-bold tracking-tight gradient-text">Transactions</h1>
+        <h1 className="text-3xl font-display font-bold tracking-tight">Transactions</h1>
         <p className="text-sm text-[var(--ink-muted)] mt-1">{filtered.length} transactions</p>
       </header>
 

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useStore } from "@/lib/store";
 import { undoAction } from "@/lib/agent/dispatch";
-import { History, Undo2, Filter } from "lucide-react";
+import { History, Undo2, Filter, Sparkles } from "lucide-react";
+import EmptyState from "@/components/Common/EmptyState";
 
 type FilterStatus = "all" | "active" | "undone";
 
@@ -41,7 +42,7 @@ export default function ActivityPage() {
     <div className="space-y-6 pb-12">
       <header className="pt-2 md:pt-6 flex items-center gap-3">
         <History size={24} className="text-[var(--accent)]" />
-        <h1 className="text-3xl font-bold tracking-tight gradient-text">Activity Log</h1>
+        <h1 className="text-3xl font-display font-bold tracking-tight">Activity Log</h1>
       </header>
 
       {/* Filters */}
@@ -87,10 +88,12 @@ export default function ActivityPage() {
       {/* Action list */}
       <div className="space-y-2">
         {filtered.length === 0 && (
-          <div className="glass p-8 text-center text-[var(--ink-muted)] text-sm">
-            No agent actions match the current filters.<br />
-            Use ⌘K to start using Copilot.
-          </div>
+          <EmptyState
+            icon={<Sparkles size={24} />}
+            title="No agent actions yet"
+            description="Actions performed by Copilot will appear here."
+            action={{ label: "Open Copilot (⌘K)", onClick: () => window.dispatchEvent(new CustomEvent("budget:open-cmdk")) }}
+          />
         )}
         {filtered.map((a) => (
           <div

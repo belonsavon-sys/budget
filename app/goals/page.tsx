@@ -37,7 +37,7 @@ export default function GoalsPage() {
   return (
     <div className="space-y-6 pb-12">
       <header className="pt-2 md:pt-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight gradient-text">Goals</h1>
+        <h1 className="text-3xl font-display font-bold tracking-tight">Goals</h1>
         <Button onClick={() => { setEditing(null); setOpen(true); }}>
           <Plus size={16} className="inline mr-1" />New goal
         </Button>

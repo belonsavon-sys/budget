@@ -110,7 +110,7 @@ export default function HouseholdPage() {
     return (
       <div className="space-y-6 pb-12">
         <header className="pt-2 md:pt-6">
-          <h1 className="text-3xl font-bold tracking-tight gradient-text">Household</h1>
+          <h1 className="text-3xl font-display font-bold tracking-tight">Household</h1>
         </header>
         <div className="glass p-8 text-center text-[var(--ink-muted)] text-sm">Loading…</div>
       </div>
@@ -121,7 +121,7 @@ export default function HouseholdPage() {
     return (
       <div className="space-y-6 pb-12">
         <header className="pt-2 md:pt-6">
-          <h1 className="text-3xl font-bold tracking-tight gradient-text">Household</h1>
+          <h1 className="text-3xl font-display font-bold tracking-tight">Household</h1>
         </header>
         <div className="glass p-8 text-center text-[var(--ink-muted)] text-sm">
           {error ? `Error: ${error}` : "No household found. Sign in to create one."}
@@ -141,7 +141,7 @@ export default function HouseholdPage() {
         <Link href="/settings" className="tap p-2 rounded-full hover:bg-[var(--hover)] text-[var(--ink-muted)]">
           ←
         </Link>
-        <h1 className="text-3xl font-bold tracking-tight gradient-text">Household</h1>
+        <h1 className="text-3xl font-display font-bold tracking-tight">Household</h1>
       </header>
 
       {error && (

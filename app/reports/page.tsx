@@ -238,7 +238,7 @@ export default function ReportsPage() {
   return (
     <div className="space-y-6 pb-12">
       <header className="pt-2 md:pt-6">
-        <h1 className="text-3xl font-bold tracking-tight gradient-text">Reports</h1>
+        <h1 className="text-3xl font-display font-bold tracking-tight">Reports</h1>
       </header>
 
       <div className="glass p-4 grid grid-cols-2 md:grid-cols-5 gap-3">

@@ -63,6 +63,8 @@ export default function TransactionRow({ txn }: { txn: Transaction }) {
         className={`glass p-3 flex items-center gap-3 ${opacity}`}
       >
         <div
+          role="img"
+          aria-label={category?.name ?? txn.type}
           className="w-10 h-10 rounded-full grid place-items-center text-white shrink-0"
           style={{ background: category?.color ?? color }}
         >

@@ -62,7 +62,7 @@ export default function InstallPrompt() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
           transition={{ type: "spring", stiffness: 320, damping: 30 }}
-          className="fixed bottom-24 md:bottom-4 right-4 z-40 glass p-3 max-w-xs flex items-center gap-3"
+          className="hidden md:flex fixed bottom-4 right-4 z-40 glass p-3 max-w-xs items-center gap-3"
         >
           <div
             className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"

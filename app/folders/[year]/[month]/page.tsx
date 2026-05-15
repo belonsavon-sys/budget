@@ -58,7 +58,7 @@ export default function FolderPage({
         <ArrowLeft size={14} /> Folders
       </Link>
       <header className="pt-1">
-        <h1 className="text-3xl font-bold tracking-tight">
+        <h1 className="text-3xl font-display font-bold tracking-tight">
           <span className="gradient-text">{monthName(m)}</span>{" "}
           <span className="text-[var(--ink-muted)]">{y}</span>
         </h1>

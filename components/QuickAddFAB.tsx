@@ -88,6 +88,8 @@ export default function QuickAddFAB() {
           animate={{ rotate: open ? 135 : 0 }}
           transition={{ type: "spring", stiffness: 380, damping: 20 }}
           aria-label="Quick add"
+          aria-expanded={open}
+          aria-haspopup="menu"
         >
           {open ? <X size={26} strokeWidth={2.4} /> : <Plus size={26} strokeWidth={2.4} />}
         </motion.button>
