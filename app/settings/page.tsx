@@ -5,7 +5,7 @@ import { useStore } from "@/lib/store";
 import type { Currency, ThemeMode } from "@/lib/types";
 import { Field, Input, Select, Button } from "@/components/Field";
 import { downloadFile, readFileAsText, sha256 } from "@/lib/utils";
-import { Download, Upload, Lock, Unlock, Palette, Sun, Moon, Monitor, ChevronRight, RotateCcw } from "lucide-react";
+import { Download, Upload, Lock, Unlock, Palette, Sun, Moon, Monitor, ChevronRight, RotateCcw, Brain } from "lucide-react";
 import Link from "next/link";
 import Modal from "@/components/Modal";
 import { motion } from "framer-motion";
@@ -199,6 +199,16 @@ export default function SettingsPage() {
         </Link>
         <Link href="/insights" className="flex items-center justify-between p-3 -mx-2 rounded-xl hover:bg-[var(--hover)] tap">
           <span>AI insights</span>
+          <ChevronRight size={16} className="text-[var(--ink-muted)]" />
+        </Link>
+        <Link
+          href="/settings/ai"
+          className="flex items-center justify-between p-3 -mx-2 rounded-xl hover:bg-[var(--hover)] tap"
+        >
+          <div className="flex items-center gap-2">
+            <Brain size={14} className="text-[var(--accent)]" />
+            <span>AI &amp; Copilot</span>
+          </div>
           <ChevronRight size={16} className="text-[var(--ink-muted)]" />
         </Link>
       </section>
