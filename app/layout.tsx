@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Cormorant_Garamond, Playfair_Display, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import ThemeBridge from "@/components/ThemeBridge";
-import Aurora from "@/components/Aurora";
+import ThemeProvider from "@/components/Theme/ThemeProvider";
 import Nav from "@/components/Nav";
 import QuickAddFAB from "@/components/QuickAddFAB";
 import PinGate from "@/components/PinGate";
@@ -62,8 +61,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="min-h-full">
         <AuthProvider>
           <HouseholdProvider>
-            <ThemeBridge />
-            <Aurora />
+            <ThemeProvider />
             <PinGate>
               <Nav />
               <main className="md:pl-64 pb-28 md:pb-8 pt-4 px-4 md:px-8 safe-top max-w-6xl mx-auto md:mx-0">
