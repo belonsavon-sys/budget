@@ -162,7 +162,7 @@ export interface Settings {
   weekStartsMonday: boolean;
   showProjected: boolean;
   /** Wave 4: when true, agent dispatcher blocks all auto/confirm-tier tool calls. */
-  agentKillSwitch: boolean;
+  agentKillSwitch?: boolean;
 }
 
 // === Wave 3 · What-If Scenarios ===

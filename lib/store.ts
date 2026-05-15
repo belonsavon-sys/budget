@@ -15,6 +15,8 @@ import type {
   Reminder,
   Settings,
   WhatIfScenario,
+  AgentAction,
+  AgentMemory,
 } from "./types";
 import { uid } from "./utils";
 import { materializeRecurring } from "./recurring";
@@ -67,6 +69,7 @@ const defaultSettings: Settings = {
   hapticsEnabled: true,
   weekStartsMonday: false,
   showProjected: true,
+  agentKillSwitch: false,
 };
 
 export interface StoreActions {
@@ -115,6 +118,11 @@ export interface StoreActions {
   toggleActiveScenario: (id: string) => void;
   setActiveScenarios: (ids: string[]) => void;
 
+  addAgentAction: (a: Omit<AgentAction, "id" | "createdAt" | "updatedAt" | "householdId">) => AgentAction;
+  markActionUndone: (id: string) => void;
+  addAgentMemory: (m: Omit<AgentMemory, "id" | "createdAt" | "updatedAt" | "householdId">) => void;
+  removeAgentMemory: (id: string) => void;
+
   updateSettings: (s: Partial<Settings>) => void;
 
   setCurrentHousehold: (id: string | null) => void;
@@ -152,6 +160,8 @@ export const useStore = create<Store>()(
       reminders: [],
       scenarios: [],
       activeScenarioIds: [],
+      agentActions: [],
+      agentMemory: [],
       settings: defaultSettings,
       hydrated: false,
       currentHouseholdId: null,
@@ -394,6 +404,48 @@ export const useStore = create<Store>()(
         }));
       },
       setActiveScenarios: (ids) => set({ activeScenarioIds: ids }),
+
+      addAgentAction: (a) => {
+        const now = new Date().toISOString();
+        const hid = get().currentHouseholdId ?? "";
+        const action: AgentAction = {
+          ...a,
+          id: uid("act"),
+          householdId: hid,
+          createdAt: now,
+          updatedAt: now,
+        };
+        set((state) => ({ agentActions: [...state.agentActions, action] }));
+        syncAfter("agent_actions", action, "upsert");
+        return action;
+      },
+      markActionUndone: (id) => {
+        const now = new Date().toISOString();
+        set((state) => ({
+          agentActions: state.agentActions.map((a) =>
+            a.id === id ? { ...a, undoneAt: now, updatedAt: now } : a
+          ),
+        }));
+        const after = get().agentActions.find((a) => a.id === id);
+        if (after) syncAfter("agent_actions", after, "upsert");
+      },
+      addAgentMemory: (m) => {
+        const now = new Date().toISOString();
+        const hid = get().currentHouseholdId ?? "";
+        const mem: AgentMemory = {
+          ...m,
+          id: uid("mem"),
+          householdId: hid,
+          createdAt: now,
+          updatedAt: now,
+        };
+        set((state) => ({ agentMemory: [...state.agentMemory, mem] }));
+        syncAfter("agent_memory", mem, "upsert");
+      },
+      removeAgentMemory: (id) => {
+        set((state) => ({ agentMemory: state.agentMemory.filter((m) => m.id !== id) }));
+        syncAfter("agent_memory", null, "delete", id);
+      },
 
       updateSettings: (s) =>
         set((state) => ({ settings: { ...state.settings, ...s } })),

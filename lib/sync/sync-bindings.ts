@@ -2,6 +2,7 @@ import type { Database } from "../db.types";
 import type {
   Account, Category, Tag, Transaction, RecurringRule,
   SavingsGoal, Budget, Note, Reminder, WhatIfScenario, ScenarioDelta,
+  AgentAction, AgentMemory,
 } from "../types";
 
 type DB = Database["public"]["Tables"];
@@ -70,6 +71,23 @@ export const rowToApp = {
     deltas: (r.deltas as unknown as ScenarioDelta[]) ?? [],
     createdAt: r.created_at, updatedAt: r.updated_at,
   }),
+  agent_actions: (r: DB["agent_actions"]["Row"]): AgentAction => ({
+    id: r.id, householdId: r.household_id,
+    ts: r.ts, actor: r.actor as AgentAction["actor"],
+    tier: r.tier as AgentAction["tier"], tool: r.tool,
+    args: r.args, result: r.result ?? undefined,
+    inverse: r.inverse ?? undefined,
+    undoneAt: r.undone_at ?? undefined,
+    parentActionId: r.parent_action_id ?? undefined,
+    rationale: r.rationale ?? undefined,
+    createdAt: r.created_at, updatedAt: r.updated_at,
+  }),
+  agent_memory: (r: DB["agent_memory"]["Row"]): AgentMemory => ({
+    id: r.id, householdId: r.household_id,
+    kind: r.kind as AgentMemory["kind"], text: r.text,
+    source: r.source as AgentMemory["source"],
+    createdAt: r.created_at, updatedAt: r.updated_at,
+  }),
 };
 
 import type { Json } from "../db.types";
@@ -126,6 +144,19 @@ export const appToRow = {
     pinned: s.pinned, color: s.color, icon: s.icon,
     deltas: s.deltas as unknown as Json,
   }),
+  agent_actions: (a: AgentAction, householdId: string): DB["agent_actions"]["Insert"] => ({
+    id: a.id, household_id: householdId, ts: a.ts,
+    actor: a.actor, tier: a.tier, tool: a.tool,
+    args: a.args as Json, result: (a.result ?? null) as Json,
+    inverse: (a.inverse ?? null) as Json,
+    undone_at: a.undoneAt ?? null,
+    parent_action_id: a.parentActionId ?? null,
+    rationale: a.rationale ?? null,
+  }),
+  agent_memory: (m: AgentMemory, householdId: string): DB["agent_memory"]["Insert"] => ({
+    id: m.id, household_id: householdId, kind: m.kind,
+    text: m.text, source: m.source,
+  }),
 };
 
 /** Slice key in the Zustand store, indexed by DB table name. */
@@ -140,4 +171,6 @@ export const tableToSlice: Record<keyof typeof rowToApp, string> = {
   notes: "notes",
   reminders: "reminders",
   what_if_scenarios: "scenarios",
+  agent_actions: "agentActions",
+  agent_memory: "agentMemory",
 };
