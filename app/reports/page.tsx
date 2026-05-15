@@ -20,6 +20,8 @@ import { useStore } from "@/lib/store";
 import { Select, Input, Field } from "@/components/Field";
 import { formatMoney, monthName } from "@/lib/utils";
 import { motion } from "framer-motion";
+import Sankey, { type SankeyNode, type SankeyLink } from "@/components/Reports/Sankey";
+import AICommentary from "@/components/Reports/AICommentary";
 
 type Range = "thisMonth" | "lastMonth" | "ytd" | "last12" | "custom";
 
@@ -158,6 +160,72 @@ export default function ReportsPage() {
   const totalExpense = inRange.filter((t) => t.type === "expense").reduce((s, t) => s + t.amount * (1 + whatIfChange / 100), 0);
   const net = totalIncome - totalExpense;
 
+  // Current month key for AI commentary caching
+  const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
+  // Sankey nodes + links: income sources → hub → expense categories
+  const { sankeyNodes, sankeyLinks } = useMemo(() => {
+    // This month's transactions
+    const monthTxns = transactions.filter((t) => {
+      const d = new Date(t.date);
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    });
+
+    const incomeByCategory = new Map<string, number>();
+    const expenseByCategory = new Map<string, number>();
+    let totalInc = 0;
+    let totalExp = 0;
+
+    for (const t of monthTxns) {
+      if (t.type === "income") {
+        const cid = t.categoryId ?? "c-other-in";
+        incomeByCategory.set(cid, (incomeByCategory.get(cid) ?? 0) + t.amount);
+        totalInc += t.amount;
+      } else if (t.type === "expense") {
+        const cid = t.categoryId ?? "c-other-out";
+        expenseByCategory.set(cid, (expenseByCategory.get(cid) ?? 0) + t.amount);
+        totalExp += t.amount;
+      }
+    }
+
+    if (totalInc === 0 && totalExp === 0) return { sankeyNodes: [], sankeyLinks: [] };
+
+    const nodes: SankeyNode[] = [];
+    const links: SankeyLink[] = [];
+
+    // Column 0: income sources
+    for (const [cid, val] of incomeByCategory) {
+      const cat = categories.find((c) => c.id === cid);
+      nodes.push({ id: `inc-${cid}`, label: cat?.name ?? "Income", value: val, column: 0, color: cat?.color ?? "#22c55e" });
+      links.push({ source: `inc-${cid}`, target: "hub", value: val });
+    }
+
+    // Column 1: hub
+    nodes.push({ id: "hub", label: "This month", value: totalInc, column: 1, color: "#6366f1" });
+
+    // Column 2: expense categories
+    const topExp = Array.from(expenseByCategory.entries()).sort((a, b) => b[1] - a[1]).slice(0, 8);
+    let otherAmt = totalExp;
+    for (const [cid, val] of topExp) {
+      otherAmt -= val;
+      const cat = categories.find((c) => c.id === cid);
+      nodes.push({ id: `exp-${cid}`, label: cat?.name ?? "Expense", value: val, column: 2, color: cat?.color ?? "#ef4444" });
+      links.push({ source: "hub", target: `exp-${cid}`, value: val });
+    }
+
+    // Savings (remainder)
+    const savings = totalInc - totalExp;
+    if (savings > 0) {
+      nodes.push({ id: "savings", label: "Savings", value: savings, column: 2, color: "#10b981" });
+      links.push({ source: "hub", target: "savings", value: savings });
+    } else if (otherAmt > 0.01 && topExp.length < Array.from(expenseByCategory.entries()).length) {
+      nodes.push({ id: "exp-other", label: "Other", value: otherAmt, column: 2, color: "#94a3b8" });
+      links.push({ source: "hub", target: "exp-other", value: otherAmt });
+    }
+
+    return { sankeyNodes: nodes, sankeyLinks: links };
+  }, [transactions, categories, now]);
+
   return (
     <div className="space-y-6 pb-12">
       <header className="pt-2 md:pt-6">
@@ -217,6 +285,9 @@ export default function ReportsPage() {
         <Stat label="Expense" value={totalExpense} currency={settings.currency} color="#ef4444" />
         <Stat label="Net" value={net} currency={settings.currency} color={net >= 0 ? "#22c55e" : "#ef4444"} />
       </div>
+
+      <Sankey nodes={sankeyNodes} links={sankeyLinks} />
+      <AICommentary monthKey={currentMonthKey} />
 
       <motion.div
         initial={{ opacity: 0, y: 10 }}
