@@ -161,6 +161,8 @@ export interface Settings {
   hapticsEnabled: boolean;
   weekStartsMonday: boolean;
   showProjected: boolean;
+  /** Wave 4: when true, agent dispatcher blocks all auto/confirm-tier tool calls. */
+  agentKillSwitch: boolean;
 }
 
 // === Wave 3 · What-If Scenarios ===
@@ -200,6 +202,37 @@ export interface WhatIfScenario {
   updatedAt: string;
 }
 
+// === Wave 4 · AI Agent ===
+
+export type AgentTier = "auto" | "confirm" | "explicit";
+
+export interface AgentAction {
+  id: string;
+  householdId: string;
+  ts: string;
+  actor: "user" | "agent";
+  tier: AgentTier;
+  tool: string;
+  args: unknown;
+  result?: unknown;
+  inverse?: unknown;
+  undoneAt?: string;
+  parentActionId?: string;
+  rationale?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AgentMemory {
+  id: string;
+  householdId: string;
+  kind: "preference" | "fact" | "rule";
+  text: string;
+  source: "user-taught" | "agent-inferred";
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface AppState {
   accounts: Account[];
   categories: Category[];
@@ -213,6 +246,8 @@ export interface AppState {
   reminders: Reminder[];
   scenarios: WhatIfScenario[];
   activeScenarioIds: string[];
+  agentActions: AgentAction[];
+  agentMemory: AgentMemory[];
   settings: Settings;
   hydrated: boolean;
 }
