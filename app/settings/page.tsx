@@ -69,8 +69,20 @@ export default function SettingsPage() {
         <div className="text-sm font-semibold flex items-center gap-2">
           <Palette size={14} /> Theme
         </div>
+        <Link
+          href="/settings/theme"
+          className="tap flex items-center justify-between p-3 rounded-2xl bg-[var(--surface-2)] hover:bg-[var(--hover)] -mx-1"
+        >
+          <div>
+            <div className="text-sm font-medium">Color theme</div>
+            <div className="text-xs text-[var(--ink-muted)] mt-0.5">
+              5 hand-tuned themes — Architectural, Newsroom, Ledger, Terminal, Deep Space
+            </div>
+          </div>
+          <ChevronRight size={16} className="text-[var(--ink-muted)]" />
+        </Link>
         <div>
-          <div className="text-xs font-medium mb-1.5 text-[var(--muted)]">Mode</div>
+          <div className="text-xs font-medium mb-1.5 text-[var(--muted)]">Mode (legacy — overridden by theme)</div>
           <div className="grid grid-cols-3 gap-2 p-1 bg-[var(--hover)] rounded-2xl">
             {(["light", "dark", "auto"] as ThemeMode[]).map((m) => {
               const Icon = m === "light" ? Sun : m === "dark" ? Moon : Monitor;
