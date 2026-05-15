@@ -14,11 +14,13 @@ import {
   PiggyBank,
   Sparkles,
   Search,
+  Clock,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
 const items = [
   { href: "/", label: "Home", icon: Home },
+  { href: "/timeline", label: "Timeline", icon: Clock },
   { href: "/transactions", label: "Activity", icon: Wallet },
   { href: "/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/reports", label: "Reports", icon: BarChart3 },
