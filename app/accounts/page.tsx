@@ -8,6 +8,7 @@ import { accountBalance, formatMoney, netWorth } from "@/lib/utils";
 import type { Account, AccountType, Currency } from "@/lib/types";
 import Modal from "@/components/Modal";
 import { Field, Input, Select, Button } from "@/components/Field";
+import AccountSparkline from "@/components/Accounts/AccountSparkline";
 
 const TYPE_ICONS: Record<AccountType, React.ReactNode> = {
   checking: <Wallet size={18} />,
@@ -88,15 +89,18 @@ export default function AccountsPage() {
                   </button>
                 </div>
               </div>
-              <div className="relative mt-4">
-                <div className="text-3xl font-bold tabular-nums" style={{ color: bal < 0 ? "#ef4444" : undefined }}>
-                  {formatMoney(bal, a.currency)}
-                </div>
-                {settings.showProjected && projectedBal !== bal && (
-                  <div className="text-xs text-[var(--ink-muted)] mt-1">
-                    projected: {formatMoney(projectedBal, a.currency)}
+              <div className="relative mt-4 flex items-end justify-between gap-3">
+                <div>
+                  <div className="text-3xl font-bold tabular-nums" style={{ color: bal < 0 ? "#ef4444" : undefined }}>
+                    {formatMoney(bal, a.currency)}
                   </div>
-                )}
+                  {settings.showProjected && projectedBal !== bal && (
+                    <div className="text-xs text-[var(--ink-muted)] mt-1">
+                      projected: {formatMoney(projectedBal, a.currency)}
+                    </div>
+                  )}
+                </div>
+                <AccountSparkline accountId={a.id} width={100} height={32} />
               </div>
             </motion.div>
           );
