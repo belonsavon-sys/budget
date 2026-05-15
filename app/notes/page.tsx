@@ -4,7 +4,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Trash2, Pin, PinOff } from "lucide-react";
 import { useStore } from "@/lib/store";
-import { Field, Input, Textarea, Button } from "@/components/Field";
+import { Field, Input, Button } from "@/components/Field";
+import MarkdownView from "@/components/Notes/MarkdownView";
+import MentionAutocomplete from "@/components/Notes/MentionAutocomplete";
 
 export default function NotesPage() {
   const notes = useStore((s) => s.notes);
@@ -67,7 +69,7 @@ export default function NotesPage() {
                   ) : (
                     <div className="font-semibold truncate">{n.title || "Untitled"}</div>
                   )}
-                  <div className="flex gap-1">
+                  <div className="flex gap-1 flex-shrink-0 ml-2">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -88,20 +90,30 @@ export default function NotesPage() {
                     </button>
                   </div>
                 </div>
+
                 {isEdit ? (
-                  <Textarea
-                    value={draft.content}
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={(e) => setDraft({ ...draft, content: e.target.value })}
-                    onBlur={() => {
-                      updateNote(n.id, { title: draft.title, content: draft.content });
-                      setEditing(null);
-                    }}
-                    rows={6}
-                  />
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <MentionAutocomplete
+                      value={draft.content}
+                      onChange={(v) => setDraft({ ...draft, content: v })}
+                      onBlur={() => {
+                        updateNote(n.id, { title: draft.title, content: draft.content });
+                        setEditing(null);
+                      }}
+                      rows={6}
+                      placeholder="Write in Markdown… type @ to mention a transaction"
+                    />
+                    <div className="text-[10px] text-[var(--ink-muted)] mt-1 px-1">
+                      Supports Markdown · Type @ to link a transaction
+                    </div>
+                  </div>
                 ) : (
-                  <div className="text-sm text-[var(--ink-muted)] whitespace-pre-wrap line-clamp-6">
-                    {n.content || "Tap to write…"}
+                  <div className="text-sm text-[var(--ink-muted)] line-clamp-6 min-h-[2rem]">
+                    {n.content ? (
+                      <MarkdownView content={n.content} />
+                    ) : (
+                      <span className="italic">Tap to write…</span>
+                    )}
                   </div>
                 )}
                 <div className="text-[10px] text-[var(--ink-muted)] mt-2">
@@ -115,7 +127,7 @@ export default function NotesPage() {
 
       {notes.length === 0 && (
         <div className="glass p-10 text-center text-[var(--ink-muted)]">
-          A space for free-form thoughts about your money.
+          A space for free-form thoughts about your money. Supports Markdown + @transaction mentions.
         </div>
       )}
     </div>
