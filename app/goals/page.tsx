@@ -9,6 +9,7 @@ import { formatMoney, vibrate } from "@/lib/utils";
 import type { SavingsGoal } from "@/lib/types";
 import Modal from "@/components/Modal";
 import { Field, Input, Button } from "@/components/Field";
+import GoalForecast from "@/components/Goals/GoalForecast";
 
 export default function GoalsPage() {
   const goals = useStore((s) => s.goals);
@@ -110,6 +111,7 @@ export default function GoalsPage() {
                 <span>{pct.toFixed(0)}%</span>
                 <span>{formatMoney(remaining, settings.currency)} to go</span>
               </div>
+              <GoalForecast goal={g} />
               <div className="mt-3">
                 <Button variant="secondary" size="sm" onClick={() => setContributing(g)}>
                   Add contribution
