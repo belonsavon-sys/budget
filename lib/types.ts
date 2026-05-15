@@ -96,6 +96,12 @@ export interface RecurringRule {
   frequency: Frequency;
   startDate: string;
   endDate?: string;
+  /** Stop generating once the rule's account balance reaches this target.
+   *  Income rules stop at-or-above; expense rules stop at-or-below.
+   *  Priority: endCount > endBalance > endDate > never. */
+  endBalance?: number;
+  /** Stop generating after this many total occurrences (including past ones). */
+  endCount?: number;
   dayOfMonth?: number;
   autopay: boolean;
   active: boolean;

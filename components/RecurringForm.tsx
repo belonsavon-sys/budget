@@ -30,10 +30,33 @@ export default function RecurringForm({
   const [startDate, setStartDate] = useState(
     (initial?.startDate ?? new Date().toISOString()).slice(0, 10)
   );
+  type EndMode = "never" | "date" | "count" | "balance";
+  const initialEndMode: EndMode =
+    initial?.endCount != null
+      ? "count"
+      : initial?.endBalance != null
+        ? "balance"
+        : initial?.endDate
+          ? "date"
+          : "never";
+  const [endMode, setEndMode] = useState<EndMode>(initialEndMode);
   const [endDate, setEndDate] = useState(initial?.endDate?.slice(0, 10) ?? "");
+  const [endCount, setEndCount] = useState<string>(initial?.endCount != null ? String(initial.endCount) : "");
+  const [endBalance, setEndBalance] = useState<string>(
+    initial?.endBalance != null ? String(initial.endBalance) : ""
+  );
   const [autopay, setAutopay] = useState(initial?.autopay ?? true);
   const [active, setActive] = useState(initial?.active ?? true);
   const [notes, setNotes] = useState(initial?.notes ?? "");
+
+  // Quick date presets
+  const todayYear = new Date().getFullYear();
+  const endOfMonth = (() => {
+    const d = new Date(todayYear, new Date().getMonth() + 1, 0);
+    return d.toISOString().slice(0, 10);
+  })();
+  const endOfYear = `${todayYear}-12-31`;
+  const endOfNextYear = `${todayYear + 1}-12-31`;
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -47,7 +70,9 @@ export default function RecurringForm({
       tagIds,
       frequency,
       startDate: new Date(startDate).toISOString(),
-      endDate: endDate ? new Date(endDate).toISOString() : undefined,
+      endDate: endMode === "date" && endDate ? new Date(endDate).toISOString() : undefined,
+      endCount: endMode === "count" && endCount ? Math.max(1, parseInt(endCount, 10) || 0) : undefined,
+      endBalance: endMode === "balance" && endBalance ? parseFloat(endBalance) || undefined : undefined,
       autopay,
       active,
       notes: notes || undefined,
@@ -108,7 +133,7 @@ export default function RecurringForm({
         </Field>
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         <Field label="Frequency">
           <Select value={frequency} onChange={(e) => setFrequency(e.target.value as Frequency)}>
             <option value="daily">Daily</option>
@@ -121,15 +146,88 @@ export default function RecurringForm({
         <Field label="Starts">
           <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
         </Field>
-        <Field label="Ends">
-          <Input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            placeholder="Never"
-          />
-        </Field>
       </div>
+
+      <Field label="Stop condition">
+        <div className="space-y-2">
+          <div className="flex flex-wrap gap-1.5">
+            {(
+              [
+                { mode: "never", label: "Never" },
+                { mode: "date", label: "By date" },
+                { mode: "count", label: "After N times" },
+                { mode: "balance", label: "At balance" },
+              ] as const
+            ).map((opt) => {
+              const selected = endMode === opt.mode;
+              return (
+                <button
+                  key={opt.mode}
+                  type="button"
+                  onClick={() => setEndMode(opt.mode)}
+                  className="tap px-3 py-1.5 rounded-full text-xs font-medium"
+                  style={{
+                    background: selected ? "var(--accent)" : "var(--surface-2)",
+                    color: selected ? "var(--bg)" : "var(--ink-muted)",
+                  }}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {endMode === "date" && (
+            <div className="space-y-2">
+              <div className="flex flex-wrap gap-1.5">
+                <button type="button" onClick={() => setEndDate(endOfMonth)} className="tap px-2.5 py-1 rounded-full text-[11px] font-medium bg-[var(--surface-2)] text-[var(--ink-muted)]">
+                  End of month
+                </button>
+                <button type="button" onClick={() => setEndDate(endOfYear)} className="tap px-2.5 py-1 rounded-full text-[11px] font-medium bg-[var(--surface-2)] text-[var(--ink-muted)]">
+                  End of {todayYear}
+                </button>
+                <button type="button" onClick={() => setEndDate(endOfNextYear)} className="tap px-2.5 py-1 rounded-full text-[11px] font-medium bg-[var(--surface-2)] text-[var(--ink-muted)]">
+                  End of {todayYear + 1}
+                </button>
+              </div>
+              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+            </div>
+          )}
+
+          {endMode === "count" && (
+            <div>
+              <Input
+                type="number"
+                min="1"
+                step="1"
+                value={endCount}
+                onChange={(e) => setEndCount(e.target.value)}
+                placeholder="e.g. 12 — twelve monthly payments"
+              />
+              <div className="text-[11px] text-[var(--ink-muted)] mt-1">
+                Stops after this many total occurrences (counting past ones).
+              </div>
+            </div>
+          )}
+
+          {endMode === "balance" && (
+            <div>
+              <Input
+                type="number"
+                step="0.01"
+                value={endBalance}
+                onChange={(e) => setEndBalance(e.target.value)}
+                placeholder={type === "income" ? "Target balance (stops at-or-above)" : "Target balance (stops at-or-below)"}
+              />
+              <div className="text-[11px] text-[var(--ink-muted)] mt-1">
+                {type === "income"
+                  ? "Stops generating once this account reaches this balance."
+                  : "Stops generating once this account drops to or below this balance."}
+              </div>
+            </div>
+          )}
+        </div>
+      </Field>
 
       <Field label="Tags">
         <div className="flex flex-wrap gap-1.5">

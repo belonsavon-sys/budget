@@ -268,8 +268,8 @@ export const useStore = create<Store>()(
         syncAfter("recurring_rules", null, "delete", id);
       },
       generateRecurring: () => {
-        const { recurring, transactions } = get();
-        const newOnes = materializeRecurring(recurring, transactions);
+        const { recurring, transactions, accounts } = get();
+        const newOnes = materializeRecurring(recurring, transactions, 365, accounts);
         if (newOnes.length) {
           set((s) => ({ transactions: [...s.transactions, ...newOnes] }));
           for (const t of newOnes) syncAfter("transactions", t, "upsert");
