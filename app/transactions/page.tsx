@@ -7,6 +7,7 @@ import { Field, Input, Select } from "@/components/Field";
 import { Search, Filter } from "lucide-react";
 import { folderKey, monthName, formatMoney } from "@/lib/utils";
 import { motion } from "framer-motion";
+import BulkBar from "@/components/Transactions/BulkBar";
 
 export default function TransactionsPage() {
   const transactions = useStore((s) => s.transactions);
@@ -22,6 +23,7 @@ export default function TransactionsPage() {
   const [filterTag, setFilterTag] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
   const [showProjected, setShowProjected] = useState(true);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const filtered = useMemo(() => {
     return transactions
@@ -51,6 +53,17 @@ export default function TransactionsPage() {
     }
     return Array.from(map.entries()).sort((a, b) => (a[0] < b[0] ? 1 : -1));
   }, [filtered]);
+
+  function toggleSelect(id: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  const hasSelection = selectedIds.size > 0;
 
   return (
     <div className="space-y-6 pb-12">
@@ -135,9 +148,24 @@ export default function TransactionsPage() {
                     +{formatMoney(income, settings.currency)} · −{formatMoney(expense, settings.currency)}
                   </div>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {g.items.map((t) => (
-                    <TransactionRow key={t.id} txn={t} />
+                    <div key={t.id} className="flex items-start gap-2">
+                      <div className="mt-3 flex-shrink-0">
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.has(t.id)}
+                          onChange={() => toggleSelect(t.id)}
+                          className={`w-4 h-4 accent-[var(--accent)] cursor-pointer transition-opacity ${
+                            hasSelection ? "opacity-100" : "opacity-0 md:opacity-30 hover:opacity-100"
+                          }`}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <TransactionRow txn={t} />
+                      </div>
+                    </div>
                   ))}
                 </div>
               </motion.section>
@@ -145,6 +173,11 @@ export default function TransactionsPage() {
           })
         )}
       </div>
+
+      <BulkBar
+        selectedIds={Array.from(selectedIds)}
+        onClear={() => setSelectedIds(new Set())}
+      />
     </div>
   );
 }
