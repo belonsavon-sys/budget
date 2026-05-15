@@ -72,9 +72,16 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <AuthProvider>
           <HouseholdProvider>
             <ThemeProvider />
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-2 focus:rounded-lg"
+              style={{ background: "var(--accent)", color: "var(--bg)" }}
+            >
+              Skip to main content
+            </a>
             <PinGate>
               <Nav />
-              <main className="md:pl-64 pb-28 md:pb-8 pt-4 px-4 md:px-8 safe-top max-w-6xl mx-auto md:mx-0">
+              <main id="main" className="md:pl-64 pb-28 md:pb-8 pt-4 px-4 md:px-8 safe-top max-w-6xl mx-auto md:mx-0">
                 {children}
               </main>
               <QuickAddFAB />

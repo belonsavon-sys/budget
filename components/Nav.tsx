@@ -42,7 +42,7 @@ export default function Nav() {
   return (
     <>
       {/* Desktop side nav */}
-      <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-64 p-4 flex-col gap-1 z-40">
+      <aside aria-label="Primary navigation" className="hidden md:flex fixed left-0 top-0 bottom-0 w-64 p-4 flex-col gap-1 z-40">
         <div className="px-3 py-4 mb-2">
           <div className="text-2xl font-bold tracking-tight font-display accent-text">budget</div>
         </div>
@@ -54,6 +54,7 @@ export default function Nav() {
               key={it.href}
               href={it.href}
               className="relative tap"
+              aria-current={active ? "page" : undefined}
             >
               <div
                 className={`flex items-center gap-3 px-4 py-2.5 rounded-2xl transition-all ${
@@ -82,7 +83,7 @@ export default function Nav() {
       </aside>
 
       {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 safe-bottom">
+      <nav aria-label="Primary navigation" className="md:hidden fixed bottom-0 inset-x-0 z-40 safe-bottom">
         <div className="mx-3 mb-2 glass flex items-stretch justify-around p-1.5">
           {mobileItems.map((it) => {
             const active = pathname === it.href || (it.href !== "/" && pathname?.startsWith(it.href));
@@ -92,6 +93,7 @@ export default function Nav() {
                 key={it.href}
                 href={it.href}
                 className="relative flex-1 tap"
+                aria-current={active ? "page" : undefined}
               >
                 <div
                   className={`flex flex-col items-center gap-0.5 py-1.5 px-2 rounded-xl ${
