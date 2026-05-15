@@ -40,7 +40,7 @@ export default function Nav() {
       {/* Desktop side nav */}
       <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-64 p-4 flex-col gap-1 z-40">
         <div className="px-3 py-4 mb-2">
-          <div className="text-2xl font-bold tracking-tight gradient-text">budget</div>
+          <div className="text-2xl font-bold tracking-tight font-display accent-text">budget</div>
         </div>
         {items.map((it) => {
           const active = pathname === it.href || (it.href !== "/" && pathname?.startsWith(it.href));
@@ -53,18 +53,24 @@ export default function Nav() {
             >
               <div
                 className={`flex items-center gap-3 px-4 py-2.5 rounded-2xl transition-all ${
-                  active ? "text-white" : "hover:bg-[var(--hover)]"
+                  active ? "" : "hover:bg-[var(--hover)]"
                 }`}
               >
                 {active && (
                   <motion.div
                     layoutId="nav-pill"
-                    className="absolute inset-0 rounded-2xl gradient-fill -z-10"
+                    className="absolute inset-0 rounded-2xl -z-10"
+                    style={{ background: "var(--accent)" }}
                     transition={{ type: "spring", stiffness: 380, damping: 32 }}
                   />
                 )}
-                <Icon size={18} strokeWidth={2} />
-                <span className="text-sm font-medium">{it.label}</span>
+                <Icon size={18} strokeWidth={2} style={active ? { color: "var(--bg)" } : undefined} />
+                <span
+                  className="text-sm font-medium"
+                  style={active ? { color: "var(--bg)" } : undefined}
+                >
+                  {it.label}
+                </span>
               </div>
             </Link>
           );
@@ -85,18 +91,24 @@ export default function Nav() {
               >
                 <div
                   className={`flex flex-col items-center gap-0.5 py-1.5 px-2 rounded-xl ${
-                    active ? "text-white" : "text-[var(--muted)]"
+                    active ? "" : "text-[var(--ink-muted)]"
                   }`}
                 >
                   {active && (
                     <motion.div
                       layoutId="nav-pill-mobile"
-                      className="absolute inset-0 rounded-xl gradient-fill -z-10"
+                      className="absolute inset-0 rounded-xl -z-10"
+                      style={{ background: "var(--accent)" }}
                       transition={{ type: "spring", stiffness: 380, damping: 32 }}
                     />
                   )}
-                  <Icon size={20} strokeWidth={2} />
-                  <span className="text-[10px] font-medium">{it.label}</span>
+                  <Icon size={20} strokeWidth={2} style={active ? { color: "var(--bg)" } : undefined} />
+                  <span
+                    className="text-[10px] font-medium"
+                    style={active ? { color: "var(--bg)" } : undefined}
+                  >
+                    {it.label}
+                  </span>
                 </div>
               </Link>
             );
