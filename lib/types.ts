@@ -163,6 +163,43 @@ export interface Settings {
   showProjected: boolean;
 }
 
+// === Wave 3 · What-If Scenarios ===
+
+export type ProjectionHorizon = "1y" | "5y" | "10y" | "30y" | "all";
+
+export type ScenarioDeltaKind =
+  | "income-add"        // recurring positive cashflow
+  | "expense-add"       // recurring negative cashflow
+  | "expense-remove"    // cancels an existing recurring rule for the period (matched by categoryId) — v1 noop
+  | "rate-change"       // multiplier on a category's spending — v1 noop
+  | "lump-sum";         // single positive or negative event at delta.date
+
+export interface ScenarioDelta {
+  id: string;
+  kind: ScenarioDeltaKind;
+  amount: number;                    // signed: positive = inflow, negative = outflow (for income-add and lump-sum); for expense-add, positive number counted as expense
+  currency: Currency;
+  frequency?: Frequency;             // ignored for lump-sum
+  categoryId?: string;               // for rate-change + expense-remove
+  rateMultiplier?: number;           // for rate-change (e.g. 1.1 = +10%)
+  date?: string;                     // for lump-sum
+  note?: string;
+}
+
+export interface WhatIfScenario {
+  id: string;
+  householdId: string;
+  name: string;
+  startDate: string;                 // ISO; deltas start affecting projection here
+  endDate?: string;                  // ISO; bounded scenarios end here
+  pinned: boolean;
+  color: string;
+  icon: string;
+  deltas: ScenarioDelta[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface AppState {
   accounts: Account[];
   categories: Category[];
@@ -174,6 +211,8 @@ export interface AppState {
   budgets: Budget[];
   notes: Note[];
   reminders: Reminder[];
+  scenarios: WhatIfScenario[];
+  activeScenarioIds: string[];
   settings: Settings;
   hydrated: boolean;
 }

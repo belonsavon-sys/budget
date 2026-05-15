@@ -143,6 +143,8 @@ export const useStore = create<Store>()(
       budgets: [],
       notes: [],
       reminders: [],
+      scenarios: [],
+      activeScenarioIds: [],
       settings: defaultSettings,
       hydrated: false,
       currentHouseholdId: null,

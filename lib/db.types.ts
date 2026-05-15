@@ -556,6 +556,59 @@ export type Database = {
           },
         ]
       }
+      what_if_scenarios: {
+        Row: {
+          color: string
+          created_at: string
+          deleted_at: string | null
+          deltas: Json
+          end_date: string | null
+          household_id: string
+          icon: string
+          id: string
+          name: string
+          pinned: boolean
+          start_date: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          deleted_at?: string | null
+          deltas?: Json
+          end_date?: string | null
+          household_id: string
+          icon?: string
+          id: string
+          name: string
+          pinned?: boolean
+          start_date: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          deleted_at?: string | null
+          deltas?: Json
+          end_date?: string | null
+          household_id?: string
+          icon?: string
+          id?: string
+          name?: string
+          pinned?: boolean
+          start_date?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "what_if_scenarios_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
